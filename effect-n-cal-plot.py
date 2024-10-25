@@ -5,20 +5,17 @@ import numpy as np
 import pandas as pd
 from utils import toep
 
-#linear data
 snr=4
-p=2
-n=100
+p=20
+n=1000
 intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
-y_method='lin'
+y_method='nonlin'
 beta= np.array([2, 1])
 
-n_calib=[1, 10, 25, 50, 100]
 
-beta= np.array([2, 1])
+var_to_plot = [0, 1, 6, 7]
 
-var_to_plot = [0, 1]
 
 def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
     if y_method == 'lin':
@@ -27,7 +24,7 @@ def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
         if j >4:
             return [0 for _ in intra_cor]
         elif j==0:
-            return (1-cor**2)/2
+            return (1-intra_cor**2)/2
         elif j==1:
             theo=[]
             for cor in intra_cor:

@@ -22,7 +22,7 @@ def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
         if j >4:
             return [0 for _ in intra_cor]
         elif j==0:
-            return (1-cor**2)/2
+            return (1-intra_cor**2)/2
         elif j==1:
             theo=[]
             for cor in intra_cor:

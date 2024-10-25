@@ -24,6 +24,14 @@ cor_meth='toep'
 y_method='lin'
 beta= np.array([2, 1])
 
+#non linear
+# snr=4
+# p=50
+# n=1000
+# intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
+# cor_meth='toep'
+# y_method='nonlin'
+# beta= np.array([2, 1])
 
 n_cal=100
 n_jobs=10
@@ -33,7 +41,7 @@ dict_model=None
 
 rng = np.random.RandomState(seed)
 
-imp2=np.zeros((5,num_rep, len(intra_cor), 2))# 5 because there is 5 methods
+imp2=np.zeros((5,num_rep, len(intra_cor), p))# 5 because there is 5 methods
 
 
 

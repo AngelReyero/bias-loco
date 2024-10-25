@@ -6,9 +6,10 @@ import pandas as pd
 from utils import toep
 
 snr=4
-dim=[10, 20, 35, 50, 100]
+dim=[10, 20]#, 35, 50, 100]
 min_p=10
-n=1000
+n=100
+cor_meth='toep'
 cor=0.6
 y_method='nonlin'
 

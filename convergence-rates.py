@@ -25,10 +25,13 @@ y_method='lin'
 beta= np.array([2, 1])
 
 
+
 # p=50
 # cor=0.6
 # n_samples=[50, 100, 200, 500, 1000, 2000]
 # y_method = "nonlin"
+# beta= np.array([2, 1])
+# cor_meth='toep'
 
 
 
@@ -41,7 +44,7 @@ dict_model=None
 
 rng = np.random.RandomState(seed)
 
-imp2=np.zeros((5,num_rep, len(n_samples), 2))# 5 because there is 5 methods
+imp2=np.zeros((5,num_rep, len(n_samples), p))# 5 because there is 5 methods
 
 
 

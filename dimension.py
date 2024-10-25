@@ -15,17 +15,18 @@ from sklearn.metrics import mean_squared_error
 
 
 seed= 0
-num_rep=20
+num_rep=3
 
 
 snr=4
-dim=[10, 20, 35, 50, 100]
+dim=[10, 20]#, 35, 50, 100]
 min_p=10
-n=1000
+n=100
+cor_meth='toep'
 cor=0.6
 y_method='nonlin'
 
-imp2=np.zeros((4,num_rep, len(dim), min_p))# 4 because there is 4 methods
+imp2=np.zeros((5,num_rep, len(dim), min_p))
 
 
 
@@ -44,7 +45,7 @@ for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,p) in enumerate(dim):
         print("With d="+str(p))
-        X, y = GenToysDataset(n=n, d=p, cor=cor, y_method=y_method, k=2, mu=None, rho_toep=cor)
+        X, y = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
 
         model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model)
@@ -59,7 +60,9 @@ for l in range(num_rep):
             n_cal=n_cal)
         rob_cpi.fit(X_train, y_train)
         rob_importance = rob_cpi.score(X_test, y_test)
-        imp2[4,l,i]= rob_importance["importance"].reshape((p,))
+        intermed= rob_importance["importance"].reshape((p,))
+        imp2[4, l, i]= intermed[:min_p]
+    
        
         cpi= robust_CPI(
             estimator=model,
@@ -70,7 +73,8 @@ for l in range(num_rep):
             n_cal=1)
         cpi.fit(X_train, y_train)
         cpi_importance = cpi.score(X_test, y_test)
-        imp2[0,l,i]= cpi_importance["importance"].reshape((p,))
+        intermed= cpi_importance["importance"].reshape((p,))
+        imp2[0,l,i]=intermed[:min_p]
 
         pi = PermutationImportance(
             estimator=model,
@@ -80,8 +84,8 @@ for l in range(num_rep):
         )
         pi.fit(X_train, y_train)
         pi_importance = pi.score(X_test, y_test)
-        imp2[1,l,i]= pi_importance["importance"].reshape((p,))
-
+        intermed= pi_importance["importance"].reshape((p,))
+        imp2[1,l,i] = intermed[:min_p]
        
         #LOCO Williamson
         ntrees = np.arange(100, 500, 100)
@@ -89,7 +93,7 @@ for l in range(num_rep):
         param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
         ## set up cv objects
         cv_full = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 5, n_jobs=n_jobs)
-        for j in range(p):
+        for j in range(min_p):
             print("covariate: "+str(j))
             vimp = vimpy.vim(y = y, x = X, s = j, pred_func = cv_full, measure_type = "r_squared")
             vimp.get_point_est()
@@ -108,7 +112,9 @@ for l in range(num_rep):
         )
         loco.fit(X_train, y_train)
         loco_importance = loco.score(X_test, y_test)
-        imp2[3,l,i]= loco_importance["importance"].reshape((p,))
+
+        intermed = loco_importance["importance"].reshape((p,))
+        imp2[3,l,i] = intermed[:min_p]
 
 
 
@@ -130,7 +136,7 @@ for l in range(num_rep):
             else:
                 f_res1["method"]=["Robust-CPI"]
             f_res1["d"]=d
-            for k in range(p):
+            for k in range(min_p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
