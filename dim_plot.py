@@ -6,9 +6,9 @@ import pandas as pd
 from utils import toep
 
 snr=4
-dim=[10, 20]#, 35, 50, 100]
+dim=[10, 20, 35, 50, 100]
 min_p=10
-n=100
+n=1000
 cor_meth='toep'
 cor=0.6
 y_method='nonlin'
@@ -22,7 +22,7 @@ def theoretical_curve(y_method, coef_to_plot, dim, cor, beta=[2, 1]):
         if j >4:
             return [0 for _ in dim]
         elif j==0:
-            return (1-cor**2)/2
+            return [(1-cor**2)/2 for _ in dim]
         elif j==1:
             theo=[]
             for p in dim:

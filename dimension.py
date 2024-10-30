@@ -15,13 +15,13 @@ from sklearn.metrics import mean_squared_error
 
 
 seed= 0
-num_rep=3
+num_rep=20
 
 
 snr=4
-dim=[10, 20]#, 35, 50, 100]
+dim=[10, 20, 35, 50, 100]
 min_p=10
-n=100
+n=1000
 cor_meth='toep'
 cor=0.6
 y_method='nonlin'
