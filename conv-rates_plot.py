@@ -61,4 +61,4 @@ for j in var_to_plot:
 
     plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
     plt.xlabel(r'Number of samples',fontsize=15 )
-    plt.savefig(f"visualization/conv_rates_{y_method}_p{p}_n{n}_var{j}.pdf", bbox_inches="tight")
+    plt.savefig(f"visualization/conv_rates_{y_method}_p{p}_cor{cor}_var{j}.pdf", bbox_inches="tight")

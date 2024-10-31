@@ -15,23 +15,23 @@ from sklearn.metrics import mean_squared_error
 seed= 0
 num_rep=20
 
-#linear data
-snr=4
-p=2
-cor=0.6
-n_samples=[30, 50, 100, 250, 500, 1000, 2000]
-cor_meth='toep'
-y_method='lin'
-beta= np.array([2, 1])
-
-
-
-# p=50
+# #linear data
+# snr=4
+# p=2
 # cor=0.6
-# n_samples=[50, 100, 200, 500, 1000, 2000]
-# y_method = "nonlin"
-# beta= np.array([2, 1])
+# n_samples=[30, 50, 100, 250, 500, 1000, 2000]
 # cor_meth='toep'
+# y_method='lin'
+# beta= np.array([2, 1])
+
+
+
+p=50
+cor=0.6
+n_samples=[50, 100, 200, 500, 1000, 2000]
+y_method = "nonlin"
+beta= np.array([2, 1])
+cor_meth='toep'
 
 
 
