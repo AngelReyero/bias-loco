@@ -5,15 +5,25 @@ import numpy as np
 import pandas as pd
 from utils import toep
 
+# snr=4
+# p=2
+# n=100
+# intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
+# cor_meth='toep'
+# y_method='lin'
+# beta= np.array([2, 1])
+# var_to_plot = [0, 1]
+
 snr=4
-p=2
-n=100
+p=50
+n=1000
 intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
-y_method='lin'
+y_method='nonlin'
 beta= np.array([2, 1])
 
-var_to_plot = [0, 1]
+var_to_plot = [0, 1, 6, 7]
+
 
 def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
     if y_method == 'lin':
