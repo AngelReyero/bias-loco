@@ -7,14 +7,24 @@ from utils import toep
 
 
 #linear data
-snr=4
-p=2
+# snr=4
+# p=2
+# cor=0.6
+# n_samples=[30, 50, 100, 250, 500, 1000, 2000]
+# cor_meth='toep'
+# y_method='lin'
+# beta= np.array([2, 1])
+# var_to_plot = [0, 1]
+
+
+p=50
 cor=0.6
-n_samples=[30, 50, 100, 250, 500, 1000, 2000]
-cor_meth='toep'
-y_method='lin'
+n_samples=[50, 100, 200, 500, 1000, 2000]
+y_method = "nonlin"
 beta= np.array([2, 1])
-var_to_plot = [0, 1]
+cor_meth='toep'
+var_to_plot = [0, 1, 6, 7]
+
 
 def theoretical_curve(y_method, coef_to_plot, cor,p, beta=[2, 1]):
     if y_method == 'lin':
