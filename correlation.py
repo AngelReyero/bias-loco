@@ -13,16 +13,17 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 
 seed= 0
-num_rep=20
+num_rep=10
 
 #linear data
 snr=4
 p=50
-n=1000
+n=10000
 intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 y_method='nonlin'
 beta= np.array([2, 1])
+super_learner=True
 
 #non linear
 # snr=4
@@ -52,7 +53,7 @@ for l in range(num_rep):
         X, y = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
     
-        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model)
+        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model,super_learner=super_learner)
 
     
         rob_cpi= robust_CPI(
@@ -140,8 +141,15 @@ for l in range(num_rep):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
-f_res.to_csv(
-    f"results_csv/correlation_{y_method}_p{p}_n{n}.csv",
+
+if super_learner:
+    f_res.to_csv(
+    f"results_csv/correlation_{y_method}_p{p}_n{n}_super.csv",
     index=False,
 ) 
+else:
+    f_res.to_csv(
+        f"results_csv/correlation_{y_method}_p{p}_n{n}.csv",
+        index=False,
+    ) 
 print(f_res.head())

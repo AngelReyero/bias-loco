@@ -21,6 +21,7 @@ intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 y_method='nonlin'
 beta= np.array([2, 1])
+super_learner=True
 
 var_to_plot = [0, 1, 6, 7]
 
@@ -45,8 +46,11 @@ def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
                 theo.append((1-np.dot(np.dot(sigma_1,inv), sigma_1.T))*0.5)
             return theo
 
+if super_learner:
+    df = pd.read_csv(f"results_csv/correlation_{y_method}_p{p}_n{n}_super.csv",)
+else: 
+    df = pd.read_csv(f"results_csv/correlation_{y_method}_p{p}_n{n}.csv",)
 
-df = pd.read_csv(f"results_csv/correlation_{y_method}_p{p}_n{n}.csv",)
 
 # Display the first few rows of the DataFrame
 print(df.head())
@@ -73,6 +77,9 @@ for j in var_to_plot:
 
     plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
     plt.xlabel(r'Correlation',fontsize=15 )
-    plt.savefig(f"visualization/correlation_{y_method}_p{p}_n{n}_var{j}.pdf", bbox_inches="tight")
+    if super_learner:
+        plt.savefig(f"visualization/correlation_{y_method}_p{p}_n{n}_var{j}_super.pdf", bbox_inches="tight")
+    else:
+        plt.savefig(f"visualization/correlation_{y_method}_p{p}_n{n}_var{j}.pdf", bbox_inches="tight")
 
 
