@@ -17,6 +17,10 @@ from sklearn.linear_model import RidgeCV, Ridge
 from sklearn.svm import SVR
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import uniform, randint
+from hidimstat.data_simulation import simu_data
+from sklearn.preprocessing import PolynomialFeatures
+
+
 
 
 def hypertune_predictor(estimator, X, y, param_grid, n_jobs=10):
@@ -35,7 +39,7 @@ def best_mod(X_train, y_train, seed=2024, n_jobs=10, verbose=False, regressor=No
     if super_learner:
                 # Define base estimators
         estimators = [
-            ('lr', RidgeCV()),
+            ('rf', RandomForestRegressor(random_state=seed)),
             ('lasso', Lasso()),
             ('svr', SVR()),  # Use SVR instead of LinearSVR
             ('hgb', HistGradientBoostingRegressor(random_state=seed))
@@ -43,7 +47,8 @@ def best_mod(X_train, y_train, seed=2024, n_jobs=10, verbose=False, regressor=No
 
         # Define the parameter grid for RandomizedSearchCV
         param_grid = {
-            'lr__alphas': [np.logspace(-6, 6, 13)],  # Alphas for RidgeCV
+            'rf__n_estimators': randint(50, 500), 
+            'rf__max_depth': [3, 6, 10], 
             'lasso__alpha': uniform(0.001, 1.0), 
             'svr__C': uniform(0.1, 100),  # C parameter for SVR
             'svr__kernel': ['linear', 'poly', 'rbf', 'sigmoid'],  # Different kernels for SVR
@@ -191,8 +196,12 @@ def ind(i,j,k):
 def toep (d, rho=0.6):
   return np.array([[ (rho)**abs(i-j) for i in range(d)]for j in range(d)])
 
-def GenToysDataset(n=1000, d=10, cor='toep', y_method="nonlin", k=2, mu=None, rho_toep=0.6):
-    
+def GenToysDataset(n=1000, d=10, cor='toep', y_method="nonlin", k=2, mu=None, rho_toep=0.6, sparsity=0.1, seed=0):
+    true_imp=np.zeros(d)
+    if y_method=="hidimstats":
+        X, y, _, non_zero_index = simu_data(n, d, rho=rho_toep, sparsity=sparsity, seed=seed)
+        true_imp[non_zero_index]=1
+        return X, y, true_imp
     X = np.zeros((n,d))
     y = np.zeros(n)
     if mu is None:
@@ -209,13 +218,31 @@ def GenToysDataset(n=1000, d=10, cor='toep', y_method="nonlin", k=2, mu=None, rh
         X= np.random.multivariate_normal(mu,toep(d, rho_toep),size=n)
     else :
         print("WARNING: key word")
-    
     if y_method == "nonlin":
         y=X[:,0]*X[:,1]*(X[:,2]>0)+2*X[:,3]*X[:,4]*(0>X[:,2])
+        true_imp[0:5]=1
     elif y_method == "nonlin2":
         y=X[:,0]*X[:,1]*(X[:,2]>0)+2*X[:,3]*X[:,4]*(0>X[:,2])+X[:, 5]*X[:,6]/2-X[:,7]**2+X[:,9]*(X[:, 8]>0)
+        true_imp[0:10]=1
     elif y_method == "lin":
         y=2*X[:,0]+X[:,1]
+        true_imp[0:2]=1
+    elif y_method =="poly":
+        rng = np.random.RandomState(seed)
+        non_zero_index = rng.choice(d, int(sparsity*d), replace=False)
+
+        poly_transformer = PolynomialFeatures(
+            degree=3, interaction_only=True
+        )  
+        features = poly_transformer.fit_transform(X[:, non_zero_index])
+
+        # coefficient associated to each feature, can be either -1, or 1 with equal probability
+        coef_features = np.random.choice([-1, 1], features.shape[1])
+        y = np.dot(features, coef_features)
+        true_imp[non_zero_index]=1
     else :
         print("WARNING: key word")
-    return X, y
+    return X, y, true_imp
+
+
+

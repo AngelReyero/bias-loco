@@ -11,17 +11,29 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.linear_model import LassoCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
+import argparse
+
+# Parse command-line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--y_method', type=str, required=True, help='The y_method to use')
+args = parser.parse_args()
+
+y_method = args.y_method
+
+snr = 4
+p = 10
+n = 100
+sparsity = 0.1
+
+print(f"Running with y_method: {y_method}")
 
 seed= 0
-num_rep=10
+num_rep=2
 
-#linear data
-snr=4
-p=50
-n=10000
-intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
+
+
+intra_cor=[0.05, 0.5]#[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
-y_method='nonlin'
 beta= np.array([2, 1])
 super_learner=True
 
@@ -43,14 +55,15 @@ dict_model=None
 rng = np.random.RandomState(seed)
 
 imp2=np.zeros((5,num_rep, len(intra_cor), p))# 5 because there is 5 methods
-
+tr_imp=np.zeros((num_rep, len(intra_cor), p))
 
 
 for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,cor) in enumerate(intra_cor):
         print("With correlation="+str(cor))
-        X, y = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
+        X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor, sparsity=sparsity, seed=seed)
+        tr_imp[l, i]=true_imp
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
     
         model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model,super_learner=super_learner)
@@ -139,6 +152,7 @@ for l in range(num_rep):
             f_res1["intra_cor"]=intra_cor[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
+                f_res1["tr_V"+str(k)] =tr_imp[l, j, k]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
 
