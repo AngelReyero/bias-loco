@@ -40,7 +40,7 @@ dict_model=None
 
 
 
-#%%
+
 for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,p) in enumerate(dim):

@@ -13,18 +13,19 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 
 seed= 0
-num_rep=20
+num_rep=10
 
 snr=4
 p=50
-n=1000
-intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
+n=10000
+intra_cor=[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 y_method='nonlin'
 beta= np.array([2, 1])
+super_learner=True
 
 
-n_calib=[1, 10, 50, 100, 200]
+n_calib=[1, 5, 20, 50, 100, 250]
 
 n_jobs=10
 
@@ -41,10 +42,10 @@ for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,cor) in enumerate(intra_cor):
         print("With correlation="+str(cor))
-        X, y = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
+        X, y, _ = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
     
-        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model)
+        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model, super_learner=super_learner)
 
         for j, n_cal in enumerate(n_calib):
             rob_cpi= robust_CPI(

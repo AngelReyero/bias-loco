@@ -11,30 +11,27 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.linear_model import LassoCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
+import argparse
 
 seed= 0
-num_rep=20
+num_rep=2
 
-# #linear data
-# snr=4
-# p=2
-# cor=0.6
-# n_samples=[30, 50, 100, 250, 500, 1000, 2000]
-# cor_meth='toep'
-# y_method='lin'
-# beta= np.array([2, 1])
+# Parse command-line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--y_method', type=str, required=True, help='The y_method to use')
+args = parser.parse_args()
 
+y_method = args.y_method
 
-
-p=50
+p=10
 cor=0.6
-n_samples=[50, 100, 200, 500, 1000, 2000]
-y_method = "nonlin"
+n_samples=[100, 250]#=[100, 250, 500, 1000, 2000, 5000]
 beta= np.array([2, 1])
 cor_meth='toep'
+sparsity=0.1
+super_learner=True
 
-
-
+print(f"Running with y_method: {y_method}")
 
 n_cal=100
 n_jobs=10
@@ -45,6 +42,7 @@ dict_model=None
 rng = np.random.RandomState(seed)
 
 imp2=np.zeros((5,num_rep, len(n_samples), p))# 5 because there is 5 methods
+tr_imp=np.zeros((num_rep, len(n_samples), p))
 
 
 
@@ -53,10 +51,11 @@ for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,n) in enumerate(n_samples):
         print("With n="+str(n))
-        X, y = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
+        X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor,  sparsity=sparsity, seed=seed)
+        tr_imp[l, i]=true_imp
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
         
-        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model)
+        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model, super_learner=super_learner)
 
     
         rob_cpi= robust_CPI(
@@ -144,10 +143,18 @@ for l in range(num_rep):
             f_res1["n_samples"]=n_samples[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
+                f_res1["tr_V"+str(k)] =tr_imp[l, j, k]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
-f_res.to_csv(
-    f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}.csv",
+if super_learner:
+    f_res.to_csv(
+    f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}_super.csv",
     index=False,
 ) 
+else:
+    f_res.to_csv(
+        f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}.csv",
+        index=False,
+    ) 
+
 print(f_res.head())
