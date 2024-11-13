@@ -13,9 +13,9 @@ args = parser.parse_args()
 
 y_method = args.y_method
 
-p=10
+p=50
 cor=0.6
-n_samples=[100, 250]
+n_samples=[100, 250, 500, 1000, 2000, 5000]
 beta= np.array([2, 1])
 cor_meth='toep'
 super_learner=True

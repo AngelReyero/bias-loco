@@ -1,7 +1,6 @@
 import subprocess
 
-# Define the different values for y_method
-y_methods = ['hidimstats', 'poly']  # Replace with your methods
+y_methods = ['nonlin', 'nonlin2', 'hidimstats', 'poly'] 
 
 # Loop through the y_method values and run code.py
 for method in y_methods:
