@@ -6,11 +6,11 @@ y_methods = ['nonlin', 'nonlin2', 'hidimstats', 'poly']
 # Loop through the y_method values and run code.py
 for method in y_methods:
     # Construct the command to run code.py with the current y_method
-    command = f"python correlation.py --y_method {method}"
+    command = f"python dimension.py --y_method {method}"
     
     # Use subprocess to run the command
     process = subprocess.run(command, shell=True)
-    command_plot = f"python auc-corrlation.py --y_method {method}"
+    command_plot = f"python auc-dim.py --y_method {method}"
     
     # Use subprocess to run the command
     process_plot = subprocess.run(command_plot, shell=True)

@@ -21,18 +21,18 @@ args = parser.parse_args()
 y_method = args.y_method
 
 snr = 4
-p = 10
-n = 100
+p = 50
+n = 1000
 sparsity = 0.1
 
 print(f"Running with y_method: {y_method}")
 
 seed= 0
-num_rep=2
+num_rep=10
 
 
 
-intra_cor=[0.05, 0.5]#[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
+intra_cor=[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 beta= np.array([2, 1])
 super_learner=True

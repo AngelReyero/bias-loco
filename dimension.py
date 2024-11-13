@@ -12,25 +12,35 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.linear_model import LassoCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
+import argparse
 
 
 seed= 0
-num_rep=20
+num_rep=10
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--y_method', type=str, required=True, help='The y_method to use')
+args = parser.parse_args()
+
+y_method = args.y_method
 
 snr=4
 dim=[10, 20, 35, 50, 100]
-min_p=10
+max_p=100
 n=1000
 cor_meth='toep'
 cor=0.6
-y_method='nonlin'
 
-imp2=np.zeros((5,num_rep, len(dim), min_p))
-
+print(f"Running with y_method: {y_method}")
 
 
+imp2=np.zeros((5,num_rep, len(dim), max_p))
+tr_imp=np.zeros((num_rep, len(dim), max_p))
 
+
+
+sparsity=0.1
+super_learner=True
 n_cal=100
 n_jobs=10
 
@@ -45,10 +55,11 @@ for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,p) in enumerate(dim):
         print("With d="+str(p))
-        X, y = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor)
+        X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor,  sparsity=sparsity, seed=seed)
+        tr_imp[l, i, 0:p]=true_imp
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
 
-        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model)
+        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model, super_learner=super_learner)
         
 
         rob_cpi= robust_CPI(
@@ -60,8 +71,7 @@ for l in range(num_rep):
             n_cal=n_cal)
         rob_cpi.fit(X_train, y_train)
         rob_importance = rob_cpi.score(X_test, y_test)
-        intermed= rob_importance["importance"].reshape((p,))
-        imp2[4, l, i]= intermed[:min_p]
+        imp2[4, l, i, 0:p]= rob_importance["importance"].reshape((p,))
     
        
         cpi= robust_CPI(
@@ -73,8 +83,7 @@ for l in range(num_rep):
             n_cal=1)
         cpi.fit(X_train, y_train)
         cpi_importance = cpi.score(X_test, y_test)
-        intermed= cpi_importance["importance"].reshape((p,))
-        imp2[0,l,i]=intermed[:min_p]
+        imp2[0,l,i, 0:p]=cpi_importance["importance"].reshape((p,))
 
         pi = PermutationImportance(
             estimator=model,
@@ -84,8 +93,7 @@ for l in range(num_rep):
         )
         pi.fit(X_train, y_train)
         pi_importance = pi.score(X_test, y_test)
-        intermed= pi_importance["importance"].reshape((p,))
-        imp2[1,l,i] = intermed[:min_p]
+        imp2[1,l,i, 0:p] = pi_importance["importance"].reshape((p,))
        
         #LOCO Williamson
         ntrees = np.arange(100, 500, 100)
@@ -93,7 +101,7 @@ for l in range(num_rep):
         param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
         ## set up cv objects
         cv_full = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 5, n_jobs=n_jobs)
-        for j in range(min_p):
+        for j in range(p):
             print("covariate: "+str(j))
             vimp = vimpy.vim(y = y, x = X, s = j, pred_func = cv_full, measure_type = "r_squared")
             vimp.get_point_est()
@@ -112,9 +120,7 @@ for l in range(num_rep):
         )
         loco.fit(X_train, y_train)
         loco_importance = loco.score(X_test, y_test)
-
-        intermed = loco_importance["importance"].reshape((p,))
-        imp2[3,l,i] = intermed[:min_p]
+        imp2[3,l,i, 0:p] = loco_importance["importance"].reshape((p,))
 
 
 
@@ -136,13 +142,21 @@ for l in range(num_rep):
             else:
                 f_res1["method"]=["Robust-CPI"]
             f_res1["d"]=d
-            for k in range(min_p):
+            for k in range(max_p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
+                f_res1["tr_V"+str(k)] =tr_imp[l, j, k]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
-f_res.to_csv(
-    f"results_csv/dimension_{y_method}_n{n}_cor{cor}.csv",
+if super_learner:
+    f_res.to_csv(
+    f"results_csv/dimension_{y_method}_n{n}_cor{cor}_super.csv",
     index=False,
 ) 
+else:
+    f_res.to_csv(
+        f"results_csv/dimension_{y_method}_n{n}_cor{cor}.csv",
+        index=False,
+    ) 
+
 print(f_res.head())
 
