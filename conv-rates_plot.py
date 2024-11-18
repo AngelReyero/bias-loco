@@ -16,13 +16,14 @@ from utils import toep
 # beta= np.array([2, 1])
 # var_to_plot = [0, 1]
 
-
+y_method="nonlin"
 p=50
 cor=0.6
-n_samples=[50, 100, 200, 500, 1000, 2000]
-y_method = "nonlin"
+n_samples=[100, 250, 500, 1000, 2000, 5000]
 beta= np.array([2, 1])
 cor_meth='toep'
+sparsity=0.1
+super_learner=True
 var_to_plot = [0, 1, 6, 7]
 
 
@@ -43,9 +44,10 @@ def theoretical_curve(y_method, coef_to_plot, cor,p, beta=[2, 1]):
             inv=np.linalg.inv(inv)
             return (1-np.dot(np.dot(sigma_1,inv), sigma_1.T))*0.5
 
-
-df = pd.read_csv(f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}.csv")
-
+if super_learner:
+    df = pd.read_csv(f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}_super.csv")
+else:
+    df = pd.read_csv(f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}.csv")
 # Display the first few rows of the DataFrame
 print(df.head())
 
@@ -65,7 +67,7 @@ for j in var_to_plot:
 
     plt.subplots_adjust(right=0.75)
 
-    #plt.xscale('log')
+    plt.xscale('log')
     #plt.yscale('log')
 
 
