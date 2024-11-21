@@ -73,6 +73,7 @@ for l in range(num_rep):
             f_res1["intra_cor"]=intra_cor[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
+                f_res1["tr_V"+str(k)] =tr_imp[l, j, k]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
 f_res.to_csv(

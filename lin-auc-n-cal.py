@@ -45,7 +45,7 @@ df['AUC'] = auc_scores
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='cor',y=f'AUC',hue='method')#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='intra_cor',y=f'AUC',hue='method')#,style='Regressor',markers=markers, dashes=dashes)
 
     
 
