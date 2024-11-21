@@ -8,15 +8,16 @@ import argparse
 
 
 
-p = 50
-n = 100
-sparsity = 0.1
-seed= 0
-cor=0.6
-snrs=[0.1, 0.5, 1, 2, 10]
+p = 200
+n = 500
+sparsity = 0.2
 
+cor=0.8
+cor_meth='toep'
+beta= np.array([2, 1])
+snrs=[0.01, 0.1, 0.5, 1, 2]
 
-n_cal=100
+n_cal=10
 
 df = pd.read_csv(f"results_csv/snr_p{p}_n{n}.csv",)
 

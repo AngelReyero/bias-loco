@@ -17,9 +17,9 @@ import argparse
 
 
 
-p = 500
-n = 1000
-sparsity = 0.1
+p = 200
+n = 500
+sparsity = 0.2
 
 
 seed= 0
@@ -28,13 +28,13 @@ num_rep=20
 
 
 
-cor=0.6
+cor=0.8
 cor_meth='toep'
 beta= np.array([2, 1])
-snrs=[0.01, 0.1, 0.5, 1, 2,5, 10, 50]
+snrs=[0.01, 0.1, 0.5, 1, 2]
 
 
-n_cal=100
+n_cal=10
 n_jobs=10
 
 best_model=None
