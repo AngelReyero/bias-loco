@@ -41,7 +41,7 @@ tr_imp=np.zeros((num_rep, len(dim), max_p))
 
 sparsity=0.1
 super_learner=True
-n_cal=100
+n_cal=10
 n_jobs=10
 
 best_model=None

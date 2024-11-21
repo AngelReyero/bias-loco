@@ -31,7 +31,7 @@ num_rep=20
 cor=0.8
 cor_meth='toep'
 beta= np.array([2, 1])
-snrs=[0.01, 0.1, 0.5, 1, 2]
+snrs=[0.01, 0.1, 0.5, 1, 2, 5]
 
 
 n_cal=10

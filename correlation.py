@@ -32,7 +32,7 @@ num_rep=10
 
 
 
-intra_cor=[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
+intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 beta= np.array([2, 1])
 super_learner=True
@@ -46,7 +46,7 @@ super_learner=True
 # y_method='nonlin'
 # beta= np.array([2, 1])
 
-n_cal=100
+n_cal=10
 n_jobs=10
 
 best_model=None
