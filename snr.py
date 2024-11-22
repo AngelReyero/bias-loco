@@ -47,6 +47,7 @@ tr_imp=np.zeros((num_rep, len(snrs), p))
 
 
 for l in range(num_rep):
+    seed+=1
     print("Experiment: "+str(l))
     for (i,snr) in enumerate(snrs):
         print("With SNR="+str(snr))

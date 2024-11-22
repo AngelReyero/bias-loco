@@ -16,7 +16,7 @@ import argparse
 
 
 seed= 0
-num_rep=10
+num_rep=20
 
 snr=2
 p=200
@@ -39,6 +39,7 @@ tr_imp=np.zeros((num_rep, len(intra_cor), p))
 
 
 for l in range(num_rep):
+    seed+=1
     print("Experiment: "+str(l))
     for (i,cor) in enumerate(intra_cor):
         print("With cor="+str(cor))

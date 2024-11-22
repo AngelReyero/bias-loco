@@ -23,7 +23,7 @@ sparsity = 0.2
 
 
 seed= 0
-num_rep=10
+num_rep=20
 
 
 
@@ -47,6 +47,7 @@ tr_imp=np.zeros((num_rep, len(cors), p))
 
 
 for l in range(num_rep):
+    seed+=1
     print("Experiment: "+str(l))
     for (i,cor) in enumerate(cors):
         print("With N="+str(n))
