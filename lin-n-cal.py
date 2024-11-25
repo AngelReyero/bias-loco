@@ -16,11 +16,11 @@ import argparse
 
 
 seed= 0
-num_rep=20
+num_rep=10
 
 snr=2
-p=200
-n=500
+p=500
+n=1000
 intra_cor=[0, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 beta= np.array([2, 1])

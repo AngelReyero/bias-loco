@@ -17,13 +17,13 @@ import argparse
 
 
 
-p = 200
-n = 500
+p = 500
+n = 1000
 sparsity = 0.2
 
 
 seed= 0
-num_rep=20
+num_rep=10
 
 
 
