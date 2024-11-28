@@ -9,8 +9,8 @@ import argparse
 
 
 
-p = 200
-ns = [100, 300, 500, 700, 1000]
+p = 500
+ns = [100, 300, 500, 700, 1000, 2000, 5000]
 sparsity = 0.2
 
 
@@ -53,7 +53,8 @@ plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=df,x='n',y=f'AUC',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
 
-    
+plt.xscale('log')
+#plt.yscale('log')  
 
 plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
