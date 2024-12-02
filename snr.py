@@ -31,7 +31,7 @@ num_rep=10
 cor=0.8
 cor_meth='toep'
 beta= np.array([2, 1])
-snrs=[0.01, 0.1, 0.5, 1, 2, 5]
+snrs=[0.01, 0.1, 0.5, 1, 2, 5, 20]
 
 
 n_cal=10
@@ -52,7 +52,7 @@ for l in range(num_rep):
     for (i,snr) in enumerate(snrs):
         print("With SNR="+str(snr))
         true_imp=np.zeros(p)
-        X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed)
+        X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed, snr=snr)
         true_imp[non_zero_index]=1
         tr_imp[l, i]=true_imp
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)

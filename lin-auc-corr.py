@@ -10,18 +10,14 @@ import argparse
 
 
 
-p = 200
-n = 500
+p = 500
+n = 1000
 sparsity = 0.2
-
-
-seed= 0
-num_rep=10
-
 
 
 
 cors=[0, 0.15, 0.3, 0.5, 0.65,0.85]
+
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2

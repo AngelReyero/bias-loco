@@ -196,10 +196,10 @@ def ind(i,j,k):
 def toep (d, rho=0.6):
   return np.array([[ (rho)**abs(i-j) for i in range(d)]for j in range(d)])
 
-def GenToysDataset(n=1000, d=10, cor='toep', y_method="nonlin", k=2, mu=None, rho_toep=0.6, sparsity=0.1, seed=0):
+def GenToysDataset(n=1000, d=10, cor='toep', y_method="nonlin", k=2, mu=None, rho_toep=0.6, sparsity=0.1, seed=0, snr=2):
     true_imp=np.zeros(d)
     if y_method=="hidimstats":
-        X, y, _, non_zero_index = simu_data(n, d, rho=rho_toep, sparsity=sparsity, seed=seed)
+        X, y, _, non_zero_index = simu_data(n, d, rho=rho_toep, sparsity=sparsity, seed=seed, snr=snr)
         true_imp[non_zero_index]=1
         return X, y, true_imp
     X = np.zeros((n,d))
