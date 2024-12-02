@@ -17,8 +17,8 @@ import argparse
 
 
 
-p = 500
-n = 1000
+p = 200
+n = 500
 sparsity = 0.2
 
 

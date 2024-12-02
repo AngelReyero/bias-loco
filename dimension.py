@@ -25,7 +25,7 @@ args = parser.parse_args()
 y_method = args.y_method
 
 snr=4
-dim=[10, 20, 35, 50, 100]
+dim=[20, 35, 50, 100]
 max_p=100
 n=1000
 cor_meth='toep'
