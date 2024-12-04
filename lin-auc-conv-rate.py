@@ -90,7 +90,7 @@ sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=df,x='n',y=f'null_imp',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
-plt.ylim(0, 5)
+plt.ylim(0, 1)
 
 plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
