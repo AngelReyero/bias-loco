@@ -17,18 +17,18 @@ import argparse
 
 
 
-p = 500
-ns = [100, 300, 500, 700, 1000, 2000, 5000]
+p = 200
+ns = [100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.2
 
 
 seed= 0
-num_rep=20
+num_rep=10
 
 
 
 
-cor=0.8
+cor=0.3
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2

@@ -19,7 +19,7 @@ seed= 0
 num_rep=10
 
 snr=2
-p=500
+p=200
 n=1000
 intra_cor=[0, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'

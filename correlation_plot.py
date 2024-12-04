@@ -17,7 +17,7 @@ from utils import toep
 snr=4
 p=50
 n=1000
-intra_cor=[0,0.05, 0.1, 0.2, 0.3, 0.5, 0.65, 0.85]
+intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 y_method='nonlin'
 beta= np.array([2, 1])

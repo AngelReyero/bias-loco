@@ -13,7 +13,7 @@ p = 200
 sparsity = 0.2
 
 
-cor=0.8
+cor=0.3
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2

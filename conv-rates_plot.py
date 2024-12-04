@@ -26,7 +26,7 @@ sparsity=0.1
 super_learner=True
 y_method="nonlin"
 
-var_to_plot = [0, 1, 6, 7]
+var_to_plot = [0, 1, 2, 3, 6, 7]
 
 
 def theoretical_curve(y_method, coef_to_plot, cor,p, beta=[2, 1]):
@@ -45,6 +45,14 @@ def theoretical_curve(y_method, coef_to_plot, cor,p, beta=[2, 1]):
             inv=np.delete(inv, 1, axis=1)
             inv=np.linalg.inv(inv)
             return (1-np.dot(np.dot(sigma_1,inv), sigma_1.T))*0.5
+        elif j==2 or j==3:
+            mat=toep(p, cor)
+            sigma_1=mat[j]
+            sigma_1=np.delete(sigma_1, j)
+            inv=np.delete(mat, j, axis=0)
+            inv=np.delete(inv, j, axis=1)
+            inv=np.linalg.inv(inv)
+            return 4*(1-np.dot(np.dot(sigma_1,inv), sigma_1.T))*0.5
 
 if super_learner:
     df = pd.read_csv(f"results_csv/conv_rates_{y_method}_p{p}_cor{cor}_super.csv")

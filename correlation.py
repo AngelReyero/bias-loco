@@ -28,14 +28,14 @@ sparsity = 0.1
 print(f"Running with y_method: {y_method}")
 
 seed= 0
-num_rep=10
+num_rep=3
 
 
 
-intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
+intra_cor=[0, 0.15]#[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 beta= np.array([2, 1])
-super_learner=True
+super_learner=False
 
 #non linear
 # snr=4
@@ -65,10 +65,15 @@ for l in range(num_rep):
         X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor, sparsity=sparsity, seed=seed)
         tr_imp[l, i]=true_imp
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
-    
-        model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model,super_learner=super_learner)
-
-    
+        if super_learner:
+            model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model,super_learner=super_learner)
+        else:
+            ntrees = np.arange(100, 500, 100)
+            lr = np.arange(.01, .1, .05)
+            param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
+            ## set up cv objects
+            model = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 5, n_jobs=n_jobs)
+            model.fit(X_train, y_train)
         rob_cpi= robust_CPI(
             estimator=model,
             imputation_model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5),
