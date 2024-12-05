@@ -6,12 +6,13 @@ import pandas as pd
 from utils import toep
 
 snr=4
-dim=[10, 20, 35, 50, 100]
+dim=[20, 35, 50, 100]
 min_p=10
 n=1000
 cor_meth='toep'
 cor=0.6
 y_method='nonlin'
+super_learner = True
 
 var_to_plot = [0, 1, 6, 7]
 
@@ -35,8 +36,10 @@ def theoretical_curve(y_method, coef_to_plot, dim, cor, beta=[2, 1]):
                 theo.append((1-np.dot(np.dot(sigma_1,inv), sigma_1.T))*0.5)
             return theo
 
-
-df = pd.read_csv(f"results_csv/dimension_{y_method}_n{n}_cor{cor}.csv",)
+if super_learner:
+    df = pd.read_csv(f"results_csv/dimension_{y_method}_n{n}_cor{cor}_super.csv",)
+else: 
+    df = pd.read_csv(f"results_csv/dimension_{y_method}_n{n}_cor{cor}.csv",)
 
 # Display the first few rows of the DataFrame
 print(df.head())
@@ -63,6 +66,9 @@ for j in var_to_plot:
 
     plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
     plt.xlabel(r'Dimesion',fontsize=15 )
-    plt.savefig(f"visualization/dimension_{y_method}_n{n}_cor{cor}_var{j}.pdf", bbox_inches="tight")
+    if super_learner:
+        plt.savefig(f"visualization/dimension_{y_method}_n{n}_cor{cor}_var{j}_super.pdf", bbox_inches="tight")
+    else:
+        plt.savefig(f"visualization/dimension_{y_method}_n{n}_cor{cor}_var{j}.pdf", bbox_inches="tight")
 
 

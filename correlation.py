@@ -12,6 +12,7 @@ from sklearn.linear_model import LassoCV
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 import argparse
+import time
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser()
@@ -22,17 +23,17 @@ y_method = args.y_method
 
 snr = 4
 p = 50
-n = 1000
+n = 10000
 sparsity = 0.1
 
 print(f"Running with y_method: {y_method}")
 
 seed= 0
-num_rep=3
+num_rep=10
 
 
 
-intra_cor=[0, 0.15]#[0,0.15, 0.3, 0.5, 0.65, 0.85]
+intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 beta= np.array([2, 1])
 super_learner=False
@@ -56,6 +57,7 @@ rng = np.random.RandomState(seed)
 
 imp2=np.zeros((5,num_rep, len(intra_cor), p))# 5 because there is 5 methods
 tr_imp=np.zeros((num_rep, len(intra_cor), p))
+tim=np.zeros((5,num_rep, len(intra_cor)))# 5 because there is 5 methods
 
 
 for l in range(num_rep):
@@ -65,6 +67,7 @@ for l in range(num_rep):
         X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method=y_method, k=2, mu=None, rho_toep=cor, sparsity=sparsity, seed=seed)
         tr_imp[l, i]=true_imp
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
+        start_time = time.time()
         if super_learner:
             model=best_mod(X_train, y_train, seed=seed, regressor=best_model, dict_reg=dict_model,super_learner=super_learner)
         else:
@@ -74,6 +77,8 @@ for l in range(num_rep):
             ## set up cv objects
             model = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 5, n_jobs=n_jobs)
             model.fit(X_train, y_train)
+        tr_time = time.time()-start_time
+        start_time = time.time()
         rob_cpi= robust_CPI(
             estimator=model,
             imputation_model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5),
@@ -83,8 +88,10 @@ for l in range(num_rep):
             n_cal=n_cal)
         rob_cpi.fit(X_train, y_train)
         rob_importance = rob_cpi.score(X_test, y_test)
+        finish_time = time.time()
         imp2[4,l,i]= rob_importance["importance"].reshape((p,))
-       
+        tim[4, l, i] = finish_time - start_time + tr_time
+        start_time = time.time()
         cpi= robust_CPI(
             estimator=model,
             imputation_model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5),
@@ -94,8 +101,11 @@ for l in range(num_rep):
             n_cal=1)
         cpi.fit(X_train, y_train)
         cpi_importance = cpi.score(X_test, y_test)
+        finish_time = time.time()
+        tim[0, l, i] = finish_time - start_time + tr_time
         imp2[0,l,i]= cpi_importance["importance"].reshape((p,))
 
+        start_time = time.time()
         pi = PermutationImportance(
             estimator=model,
             n_permutations=1,
@@ -104,10 +114,14 @@ for l in range(num_rep):
         )
         pi.fit(X_train, y_train)
         pi_importance = pi.score(X_test, y_test)
+        finish_time = time.time()
+        tim[1, l, i] = finish_time - start_time + tr_time
+
         imp2[1,l,i]= pi_importance["importance"].reshape((p,))
 
        
         #LOCO Williamson
+        start_time = time.time()
         ntrees = np.arange(100, 500, 100)
         lr = np.arange(.01, .1, .05)
         param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
@@ -122,8 +136,10 @@ for l in range(num_rep):
             vimp.get_ci()
             vimp.hypothesis_test(alpha = 0.05, delta = 0)
             imp2[2,l,i,j]+=vimp.vimp_*np.var(y)
+        finish_time = time.time()
+        tim[2, l, i] = finish_time - start_time 
         #LOCO Hidimstat
-
+        start_time = time.time()
         loco = LOCO(
             estimator=model,
             random_state=seed,
@@ -132,6 +148,8 @@ for l in range(num_rep):
         )
         loco.fit(X_train, y_train)
         loco_importance = loco.score(X_test, y_test)
+        finish_time = time.time()
+        tim[3, l, i] = finish_time - start_time + tr_time
         imp2[3,l,i]= loco_importance["importance"].reshape((p,))
 
 
@@ -158,6 +176,7 @@ for l in range(num_rep):
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
                 f_res1["tr_V"+str(k)] =tr_imp[l, j, k]
+            f_res1['tr_time'] = tim[i, l, j]
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
 
