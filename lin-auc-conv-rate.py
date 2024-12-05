@@ -9,7 +9,7 @@ from utils import toep
 
 
 
-p = 200
+p = 500
 sparsity = 0.2
 
 
@@ -19,7 +19,7 @@ num_rep=10
 
 
 
-cor=0.3
+cor=0.8
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
@@ -90,14 +90,14 @@ sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=df,x='n',y=f'null_imp',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
-plt.ylim(0, 1)
-
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
-
+plt.ylim(0, 5)
+plt.title(f'p = {p} $\\rho$ = {cor}', fontsize=15)
+#plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Bias',fontsize=15 )
+plt.ylabel(f'Bias null covariates',fontsize=15 )
 plt.xlabel(r'n',fontsize=15 )
 plt.savefig(f"visualization/null_imp_n_p{p}_cor{cor}.pdf", bbox_inches="tight")
 
@@ -115,12 +115,12 @@ sns.lineplot(data=df,x='n',y=f'non_null',hue='method',palette=palette)#,style='R
 plt.xscale('log')
 plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
-
+#plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Bias non-null',fontsize=15 )
+plt.ylabel(f'Bias non-null covariates',fontsize=15 )
 plt.xlabel(r'n',fontsize=15 )
 plt.savefig(f"visualization/non_null_n_p{p}_cor{cor}.pdf", bbox_inches="tight")
 
