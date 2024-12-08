@@ -34,6 +34,7 @@ print(df.head())
 palette = {'Robust-CPI': 'purple', '0.5*CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
 
 auc_scores = []
+null_imp = []
 
 # Iterate through each row of the DataFrame
 for index, row in df.iterrows():
@@ -43,9 +44,11 @@ for index, row in df.iterrows():
     y = np.array(y).astype(int) 
     auc = roc_auc_score(y, y_pred)
     auc_scores.append(auc)
+    null_imp.append(np.mean(abs(y_pred[y==0])))
 
 # Add the AUC scores as a new column to the DataFrame
 df['AUC'] = auc_scores
+df['null_imp'] = null_imp
 
 
 plt.figure()
@@ -66,4 +69,21 @@ if super_learner:
 else:
     plt.savefig(f"visualization/AUC_correlation_{y_method}_p{p}_n{n}.pdf", bbox_inches="tight")
 
+
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+sns.lineplot(data=df,x='intra_cor',y=f'null_imp',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+plt.title(f'n={n}, p = {p}', fontsize=15)
+#plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Bias null covariates',fontsize=15 )
+plt.xlabel(r'n',fontsize=15 )
+plt.savefig(f"visualization/corr_null_imp_n{n}_p{p}.pdf", bbox_inches="tight")
 
