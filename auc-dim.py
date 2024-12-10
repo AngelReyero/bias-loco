@@ -76,8 +76,8 @@ plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=df,x='d',y=f'null_imp',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
 
-plt.xscale('log')
-#plt.ylim(0, 5)
+#plt.xscale('log')
+plt.ylim(0, 5)
 plt.title(f'n = {n} $\\rho$ = {cor}', fontsize=15)
 plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 plt.legend().set_visible(False)
@@ -86,6 +86,6 @@ plt.subplots_adjust(right=0.75)
 
 plt.ylabel(f'Bias null covariates',fontsize=15 )
 plt.xlabel(r'Dimension',fontsize=15 )
-plt.savefig(f"visualization/dim_null_imp_n{n}_cor{cor}.pdf", bbox_inches="tight")
+plt.savefig(f"visualization/dim_{y_method}_null_imp_n{n}_cor{cor}.pdf", bbox_inches="tight")
 
 
