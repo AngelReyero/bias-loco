@@ -258,5 +258,6 @@ class r_CPI(BaseEstimator):
             ]
             
         )
-            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]+1e-6))
+            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]+1e-3))
+            out_dict["pval"][np.isnan(out_dict["pval"])] = 1
         return out_dict
