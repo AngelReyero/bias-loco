@@ -20,7 +20,7 @@ sparsity = 0.1
 intra_cor=[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 beta= np.array([2, 1])
-super_learner=True
+super_learner=False
 
 if super_learner:
     df = pd.read_csv(f"results_csv/correlation_{y_method}_p{p}_n{n}_super.csv",)
@@ -85,5 +85,5 @@ plt.subplots_adjust(right=0.75)
 
 plt.ylabel(f'Bias null covariates',fontsize=15 )
 plt.xlabel(r'n',fontsize=15 )
-plt.savefig(f"visualization/corr_null_imp_n{n}_p{p}.pdf", bbox_inches="tight")
+plt.savefig(f"visualization/corr_{y_method}_null_imp_n{n}_p{p}.pdf", bbox_inches="tight")
 

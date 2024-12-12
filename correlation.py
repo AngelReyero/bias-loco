@@ -23,7 +23,7 @@ y_method = args.y_method
 
 snr = 4
 p = 50
-n = 10000
+n = 1000
 sparsity = 0.1
 
 print(f"Running with y_method: {y_method}")

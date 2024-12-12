@@ -46,7 +46,6 @@ class r_CPI(BaseEstimator):
         score_proba: bool = False,
         random_state: int = None,
         n_jobs: int = 1,
-        n_cal: int=1, 
     ):
 
         check_is_fitted(estimator)
@@ -259,5 +258,5 @@ class r_CPI(BaseEstimator):
             ]
             
         )
-            out_dict['pval']=norm.sf(out_dict["importance"] / out_dict["std"])
+            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]+1e-6))
         return out_dict
