@@ -16,12 +16,12 @@ import time
 
 
 p = 200
-ns = [200, 500, 1000, 5000, 10000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
+ns = [200, 500, 1000, 5000, 10000, 20000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.2
 
 
 seed= 0
-num_rep=50
+num_rep=10
 
 
 
@@ -34,6 +34,7 @@ snr=2
 
 
 n_cal=10
+n_cal2 = 100
 n_jobs=10
 
 best_model=None
@@ -41,11 +42,11 @@ dict_model=None
 
 rng = np.random.RandomState(seed)
 
-imp2=np.zeros((3,num_rep, len(ns), p))# 5 because there is 5 methods
+imp2=np.zeros((4,num_rep, len(ns), p))# 5 because there is 5 methods
 tr_imp=np.zeros((num_rep, len(ns), p))
-p_val=np.zeros((3,num_rep, len(ns), p))# 5 because there is 5 methods
-tim = np.zeros((3, num_rep, len(ns)))
-# 0 R-CPI, 1 CPI, 2 LOCO-W
+p_val=np.zeros((4,num_rep, len(ns), p))# 5 because there is 5 methods
+tim = np.zeros((4, num_rep, len(ns)))
+# 0 R-CPI, 1 CPI, 2 LOCO-W, 3 R-CPI2
 
 for l in range(num_rep):
     seed+=1
@@ -80,6 +81,13 @@ for l in range(num_rep):
         tim[1, l, i] = time.time() - start_time + tr_time + imp_time
         imp2[1,l,i]= cpi_importance["importance"].reshape((p,))
         p_val[1,l,i]= cpi_importance["pval"].reshape((p,))
+
+        start_time = time.time()
+        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal2)
+        tim[3, l, i] = time.time() - start_time + tr_time + imp_time
+        imp2[3,l,i]= cpi_importance["importance"].reshape((p,))
+        p_val[3,l,i]= cpi_importance["pval"].reshape((p,))
+
         start_time = time.time()
         #LOCO Williamson
         for j in range(p):
@@ -99,7 +107,7 @@ for l in range(num_rep):
 f_res={}
 f_res = pd.DataFrame(f_res)
 for l in range(num_rep):
-    for i in range(3):
+    for i in range(4):
         for j in range(len(ns)):
             f_res1={}
             if i==0:
@@ -108,6 +116,8 @@ for l in range(num_rep):
                 f_res1["method"]=["CPI"]
             elif i==2: 
                 f_res1["method"]=["LOCO-W"]
+            elif i==3:
+                f_res1["method"] = ["r-CPI2"]
             f_res1["n"]=ns[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]

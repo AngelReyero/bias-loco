@@ -35,7 +35,7 @@ df = pd.read_csv(f"p_values/results_csv/lin_n_p{p}_cor{cor}.csv",)
 # Display the first few rows of the DataFrame
 print(df.head())
 
-palette = {'r-CPI': 'purple', 'CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
+palette = {'r-CPI': 'purple', 'CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red", 'r-CPI2' : "brown"}
 
 auc_scores = []
 null_imp = []
