@@ -23,11 +23,11 @@ seed= 0
 
 
 
-cor=0.8
+cor=0.3
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
-alpha = 0.2
+alpha = 0.05
 
 df = pd.read_csv(f"p_values/results_csv/lin_n_p{p}_cor{cor}.csv",)
 
@@ -61,13 +61,6 @@ for index, row in df.iterrows():
     # Extract the predictions for the current experiment (as a list)
     y_pred = row.filter(like="imp_V").values
     pval = row.filter(like="pval").values
-    try:
-        if not np.isfinite(pval):  # Check if pval is NaN or Inf
-            raise ValueError(f"Invalid p-value: {pval}")
-        selected = pval <= 0.05  # Perform the comparison
-    except Exception as e:
-        print(f"Error in row {row}")
-        print(f"Exception: {e}")
     selected = pval<=alpha
     y=row.filter(like="tr_V").values
     y = np.array(y).astype(int) 
