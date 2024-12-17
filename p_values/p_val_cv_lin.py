@@ -15,13 +15,13 @@ import time
 
 
 
-p = 200
+p = 150
 ns = [200, 500, 1000, 5000, 10000, 20000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.2
 
 
 seed= 0
-num_rep=100
+num_rep=20
 
 
 
@@ -42,11 +42,11 @@ dict_model=None
 
 rng = np.random.RandomState(seed)
 
-imp2=np.zeros((4,num_rep, len(ns), p))# 5 because there is 5 methods
+imp2=np.zeros((7,num_rep, len(ns), p))# 5 because there is 5 methods
 tr_imp=np.zeros((num_rep, len(ns), p))
-p_val=np.zeros((4,num_rep, len(ns), p))# 5 because there is 5 methods
-tim = np.zeros((4, num_rep, len(ns)))
-# 0 R-CPI, 1 CPI, 2 LOCO-W, 3 R-CPI2
+p_val=np.zeros((7,num_rep, len(ns), p))# 5 because there is 5 methods
+tim = np.zeros((7, num_rep, len(ns)))
+# 0 R-CPI, 1 CPI, 2 LOCO-W, 3 R-CPI2, 4 R-CPI_c, 5 CPI_c , 6 R-CPI2_c
 
 for l in range(num_rep):
     seed+=1
@@ -72,21 +72,38 @@ for l in range(num_rep):
         rob_cpi.fit(X_train, y_train)
         imp_time = time.time()-start_time
         start_time = time.time()
-        rob_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal)
+        rob_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal, p_val='emp_var')
         tim[0, l, i] = time.time() - start_time + tr_time + imp_time
         imp2[0,l,i]= rob_importance["importance"].reshape((p,))
         p_val[0,l,i]= rob_importance["pval"].reshape((p,))
         start_time = time.time()
-        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=1)
+        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=1,  p_val='emp_var')
         tim[1, l, i] = time.time() - start_time + tr_time + imp_time
         imp2[1,l,i]= cpi_importance["importance"].reshape((p,))
         p_val[1,l,i]= cpi_importance["pval"].reshape((p,))
 
         start_time = time.time()
-        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal2)
+        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal2,  p_val='emp_var')
         tim[3, l, i] = time.time() - start_time + tr_time + imp_time
         imp2[3,l,i]= cpi_importance["importance"].reshape((p,))
         p_val[3,l,i]= cpi_importance["pval"].reshape((p,))
+
+        start_time = time.time()
+        rob_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal, p_val='corrected')
+        tim[4, l, i] = time.time() - start_time + tr_time + imp_time
+        imp2[4,l,i]= rob_importance["importance"].reshape((p,))
+        p_val[4,l,i]= rob_importance["pval"].reshape((p,))
+        start_time = time.time()
+        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=1,  p_val='corrected')
+        tim[5, l, i] = time.time() - start_time + tr_time + imp_time
+        imp2[5,l,i]= cpi_importance["importance"].reshape((p,))
+        p_val[5,l,i]= cpi_importance["pval"].reshape((p,))
+
+        start_time = time.time()
+        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal2,  p_val='corrected')
+        tim[6, l, i] = time.time() - start_time + tr_time + imp_time
+        imp2[6,l,i]= cpi_importance["importance"].reshape((p,))
+        p_val[6,l,i]= cpi_importance["pval"].reshape((p,))
 
         start_time = time.time()
         #LOCO Williamson
@@ -107,7 +124,7 @@ for l in range(num_rep):
 f_res={}
 f_res = pd.DataFrame(f_res)
 for l in range(num_rep):
-    for i in range(4):
+    for i in range(7):
         for j in range(len(ns)):
             f_res1={}
             if i==0:
@@ -118,6 +135,12 @@ for l in range(num_rep):
                 f_res1["method"]=["LOCO-W"]
             elif i==3:
                 f_res1["method"] = ["r-CPI2"]
+            elif i==4:
+                f_res1["method"] = ["r-CPI_c"]
+            elif i==5:
+                f_res1["method"] = ["CPI_c"]
+            elif i==6:
+                f_res1["method"] = ["r-CPI2_c"]
             f_res1["n"]=ns[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]

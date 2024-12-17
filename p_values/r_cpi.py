@@ -193,7 +193,7 @@ class r_CPI(BaseEstimator):
         residual_permuted_y_pred = np.stack(out_list, axis=0)
         return residual_permuted_y_pred
 
-    def score(self, X, y, n_cal=10, p_val='emp_var'):
+    def score(self, X, y, n_cal=10, p_val='corrected'):
         """
         Compute the importance scores for each group of covariates.
 
@@ -258,6 +258,22 @@ class r_CPI(BaseEstimator):
             ]
             
         )
-            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]+1e-6))
+            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
             out_dict["pval"][np.isnan(out_dict["pval"])] = 1.0
+        elif p_val=='corrected':
+            out_dict["std"] = np.array(
+            [
+                (np.std(out_dict["loss_perm"][j]))*n_cal/(n_cal+1)+np.std(y)/y.shape[0]#np.sqrt(y.shape[0])
+                for j in range(self.n_groups)
+            ]
+            )
+            out_dict["importance"] = np.array(
+            [
+                (np.mean(out_dict["loss_perm"][j]) - loss_reference)*n_cal/(n_cal+1)
+                for j in range(self.n_groups)
+            ]
+            
+        )
+            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
+            #out_dict["pval"][np.isnan(out_dict["pval"])] = 1.0
         return out_dict

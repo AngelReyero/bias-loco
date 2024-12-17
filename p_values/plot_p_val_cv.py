@@ -14,7 +14,7 @@ from utils import toep
 
 
 
-p = 200
+p = 150
 sparsity = 0.2
 
 
@@ -36,6 +36,40 @@ df = pd.read_csv(f"p_values/results_csv/lin_n_p{p}_cor{cor}.csv",)
 print(df.head())
 
 palette = {'r-CPI': 'purple', 'CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red", 'r-CPI2' : "brown"}
+palette = {
+    'r-CPI': 'purple',
+    'CPI': 'blue',
+    'LOCO-W': 'green',
+    'PFI': 'orange',
+    'LOCO-HD': 'red',
+    'r-CPI2': 'brown',
+    'r-CPI_c': 'purple',
+    'CPI_c': 'blue',
+    'r-CPI2_c': 'brown'
+}
+
+markers = {
+    'r-CPI': "o",
+    'CPI': "o",
+    'LOCO-W': "^",
+    'PFI': "D",
+    'LOCO-HD': "^",
+    'r-CPI2': "o",
+    'r-CPI_c': "D",
+    'CPI_c': "D",
+    'r-CPI2_c': "D"
+}
+dashes = {
+    'r-CPI': (5, 5),              # Dashed line: dash length 5, space length 5
+    'CPI': (5, 5),
+    'LOCO-W': (5, 5),
+    'PFI': (5, 5),
+    'LOCO-HD': (5, 5),
+    'r-CPI2': (5, 5),
+    'r-CPI_c': (3, 5, 1, 5),      # Complex dash-dot pattern
+    'CPI_c': (3, 5, 1, 5),
+    'r-CPI2_c': (3, 5, 1, 5)
+}
 
 auc_scores = []
 null_imp = []
@@ -82,7 +116,7 @@ df['type_I'] = type_I
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'AUC',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='n',y=f'AUC',hue='method',style='method', palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.yscale('log')  
@@ -101,7 +135,7 @@ plt.savefig(f"p_values/visualization/AUC_n_p{p}_cor{cor}.pdf", bbox_inches="tigh
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'null_imp',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='n',y=f'null_imp',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 plt.ylim(-0.1, 0.5)
@@ -124,7 +158,7 @@ plt.savefig(f"p_values/visualization/null_imp_n_p{p}_cor{cor}.pdf", bbox_inches=
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'non_null',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='n',y=f'non_null',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 plt.ylim(0, 5)
@@ -144,7 +178,7 @@ plt.savefig(f"p_values/visualization/non_null_n_p{p}_cor{cor}.pdf", bbox_inches=
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'tr_time',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='n',y=f'tr_time',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.ylim(0, 5)
@@ -161,7 +195,7 @@ plt.savefig(f"p_values/visualization/time_n_p{p}_cor{cor}.pdf", bbox_inches="tig
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'power',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.ylim(0, 5)
@@ -178,7 +212,7 @@ plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}.pdf", bbox_inches="ti
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'type_I',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=df,x='n',y=f'type_I',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.ylim(0, 5)
