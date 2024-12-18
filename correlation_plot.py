@@ -16,14 +16,14 @@ from utils import toep
 
 snr=4
 p=50
-n=1000
+n=10000
 intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
 y_method='nonlin'
 beta= np.array([2, 1])
 super_learner=False
 
-var_to_plot = [0, 1,2, 3, 6, 7]
+var_to_plot = [0, 1, 6, 7]
 
 
 def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):

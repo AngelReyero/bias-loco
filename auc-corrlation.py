@@ -15,7 +15,7 @@ y_method = args.y_method
 
 snr = 4
 p = 50
-n = 1000
+n = 10000
 sparsity = 0.1
 intra_cor=[0,0.05, 0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
@@ -75,7 +75,7 @@ plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=df,x='intra_cor',y=f'null_imp',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
 
-plt.xscale('log')
+#plt.xscale('log')
 #plt.ylim(0, 5)
 plt.title(f'n={n}, p = {p}', fontsize=15)
 #plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
@@ -84,6 +84,24 @@ plt.subplots_adjust(right=0.75)
 
 
 plt.ylabel(f'Bias null covariates',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.xlabel(r'Correlation',fontsize=15 )
 plt.savefig(f"visualization/corr_{y_method}_null_imp_n{n}_p{p}.pdf", bbox_inches="tight")
+
+
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+sns.lineplot(data=df,x='intra_cor',y=f'tr_time',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
+
+#plt.xscale('log')
+#plt.ylim(0, 5)
+plt.title(f'n={n}, p = {p}', fontsize=15)
+#plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Time',fontsize=15 )
+plt.xlabel(r'Correlation',fontsize=15 )
+plt.savefig(f"visualization/corr_{y_method}_time_n{n}_p{p}.pdf", bbox_inches="tight")
 
