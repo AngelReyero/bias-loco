@@ -193,7 +193,7 @@ class r_CPI(BaseEstimator):
         residual_permuted_y_pred = np.stack(out_list, axis=0)
         return residual_permuted_y_pred
 
-    def score(self, X, y, n_cal=10, p_val='corrected'):
+    def score(self, X, y, n_cal=10, p_val='corrected_n'):
         """
         Compute the importance scores for each group of covariates.
 
@@ -234,46 +234,42 @@ class r_CPI(BaseEstimator):
         out_dict["loss_perm"] = dict()
         for j, y_pred_j in enumerate(y_pred_perm):
             list_loss_perm = []
-            for y_pred_perm in y_pred_j:
-                list_loss_perm.append(self.loss(y_true=y, y_pred=y_pred_perm))
+            for y_pred_perm_j in y_pred_j:
+                list_loss_perm.append(self.loss(y_true=y, y_pred=y_pred_perm_j))
             out_dict["loss_perm"][j] = np.array(list_loss_perm)
+
+        out_dict["loss_std"] = dict()
+        for j, y_pred_j in enumerate(y_pred_perm):
+            list_std_perm = []
+            for y_pred_perm in y_pred_j:
+                inter_loss = []
+                for n_t in range(y.shape[0]):
+                    inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_perm[n_t]]))-loss_reference)*n_cal/(n_cal+1))
+                list_std_perm.append(np.std(inter_loss))
+            out_dict["loss_std"][j] = np.array(list_std_perm)
+
 
         out_dict["importance"] = np.array(
             [
-                (np.mean(out_dict["loss_perm"][j]) - loss_reference)*n_cal/(n_cal+1)
+                (np.mean(out_dict["loss_perm"][j])- loss_reference)*n_cal/(n_cal+1) 
                 for j in range(self.n_groups)
             ]
         )
+        out_dict["std"] = np.array(
+            [
+                (np.mean(out_dict["loss_std"][j]))
+                for j in range(self.n_groups)
+            ]
+        )
+        
+
         if p_val=='emp_var':
-            out_dict["std"] = np.array(
-            [
-                (np.std(out_dict["loss_perm"][j]))*n_cal/(n_cal+1)
-                for j in range(self.n_groups)
-            ]
-            )
-            out_dict["importance"] = np.array(
-            [
-                (np.mean(out_dict["loss_perm"][j]) - loss_reference)*n_cal/(n_cal+1)
-                for j in range(self.n_groups)
-            ]
-            
-        )
             out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
             out_dict["pval"][np.isnan(out_dict["pval"])] = 1.0
-        elif p_val=='corrected':
-            out_dict["std"] = np.array(
-            [
-                (np.std(out_dict["loss_perm"][j]))*n_cal/(n_cal+1)+np.std(y)/y.shape[0]#np.sqrt(y.shape[0])
-                for j in range(self.n_groups)
-            ]
-            )
-            out_dict["importance"] = np.array(
-            [
-                (np.mean(out_dict["loss_perm"][j]) - loss_reference)*n_cal/(n_cal+1)
-                for j in range(self.n_groups)
-            ]
-            
-        )
+        elif p_val=='corrected_n':
+            out_dict["std"] += np.std(y)/y.shape[0]
             out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
-            #out_dict["pval"][np.isnan(out_dict["pval"])] = 1.0
+        elif p_val=='corrected_sqrt':
+            out_dict["std"] += np.std(y)/np.sqrt(y.shape[0])
+            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
         return out_dict

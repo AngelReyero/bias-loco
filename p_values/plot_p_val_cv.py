@@ -14,7 +14,7 @@ from utils import toep
 
 
 
-p = 150
+p = 50
 sparsity = 0.2
 
 
@@ -37,38 +37,53 @@ print(df.head())
 
 palette = {'r-CPI': 'purple', 'CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red", 'r-CPI2' : "brown"}
 palette = {
-    'r-CPI': 'purple',
+    'R-CPI': 'purple',
+    'R-CPI_sqrt': 'purple',
+    'R-CPI_n': 'purple',
     'CPI': 'blue',
+    'CPI_sqrt': 'blue',
+    'CPI_n': 'blue',
     'LOCO-W': 'green',
     'PFI': 'orange',
-    'LOCO-HD': 'red',
-    'r-CPI2': 'brown',
-    'r-CPI_c': 'purple',
-    'CPI_c': 'blue',
-    'r-CPI2_c': 'brown'
+    'LOCO': 'red',
+    'LOCO_n': 'red',
+    'LOCO_sqrt': 'red',
+    'R-CPI2': 'cyan',
+    'R-CPI2_sqrt': 'cyan',
+    'R-CPI2_n': 'cyan',
 }
 
 markers = {
-    'r-CPI': "o",
-    'CPI': "o",
-    'LOCO-W': "^",
+    'R-CPI':  "o",
+    'R-CPI_sqrt': "^",
+    'R-CPI_n': "D",
+    'CPI':  "o",
+    'CPI_sqrt': "^",
+    'CPI_n': "D",
+    'LOCO-W':  "o",
     'PFI': "D",
-    'LOCO-HD': "^",
-    'r-CPI2': "o",
-    'r-CPI_c': "D",
-    'CPI_c': "D",
-    'r-CPI2_c': "D"
+    'LOCO':  "o",
+    'LOCO_n': "D",
+    'LOCO_sqrt': "^",
+    'R-CPI2':  "o",
+    'R-CPI2_sqrt': "^",
+    'R-CPI2_n': "D",
 }
 dashes = {
-    'r-CPI': (5, 5),              # Dashed line: dash length 5, space length 5
-    'CPI': (5, 5),
-    'LOCO-W': (5, 5),
-    'PFI': (5, 5),
-    'LOCO-HD': (5, 5),
-    'r-CPI2': (5, 5),
-    'r-CPI_c': (3, 5, 1, 5),      # Complex dash-dot pattern
-    'CPI_c': (3, 5, 1, 5),
-    'r-CPI2_c': (3, 5, 1, 5)
+    'R-CPI':  (3, 5, 1, 5),
+    'R-CPI_sqrt': (5, 5),
+    'R-CPI_n': (1, 1),
+    'CPI':  (3, 5, 1, 5),
+    'CPI_sqrt': (5, 5),
+    'CPI_n': (1, 1),
+    'LOCO-W':  (3, 5, 1, 5),
+    'PFI': (1, 1),
+    'LOCO':  (3, 5, 1, 5),
+    'LOCO_n': (1, 1),
+    'LOCO_sqrt': (5, 5),
+    'R-CPI2':  (3, 5, 1, 5),
+    'R-CPI2_sqrt': (5, 5),
+    'R-CPI2_n': (1, 1),
 }
 
 auc_scores = []
