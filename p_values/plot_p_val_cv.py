@@ -14,7 +14,7 @@ from utils import toep
 
 
 
-p = 50
+p = 200
 sparsity = 0.2
 
 
@@ -23,7 +23,7 @@ seed= 0
 
 
 
-cor=0.3
+cor=0.8
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
