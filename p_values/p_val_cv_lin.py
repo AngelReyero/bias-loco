@@ -22,7 +22,7 @@ sparsity = 0.2
 
 
 seed= 0
-num_rep=20
+num_rep=10
 
 
 

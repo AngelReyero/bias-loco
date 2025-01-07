@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 from sklearn.base import BaseEstimator, check_is_fitted, clone
 from sklearn.metrics import mean_squared_error
 from scipy.stats import norm
-
+from utils import bootstrap_var
 
 class r_CPI(BaseEstimator):
     """
@@ -193,7 +193,7 @@ class r_CPI(BaseEstimator):
         residual_permuted_y_pred = np.stack(out_list, axis=0)
         return residual_permuted_y_pred
 
-    def score(self, X, y, n_cal=10, p_val='corrected_n'):
+    def score(self, X, y, n_cal=10, p_val='corrected_n', bootstrap=False):
         """
         Compute the importance scores for each group of covariates.
 
@@ -245,7 +245,10 @@ class r_CPI(BaseEstimator):
                 inter_loss = []
                 for n_t in range(y.shape[0]):
                     inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_perm[n_t]]))-loss_reference)*n_cal/(n_cal+1))
-                list_std_perm.append(np.std(inter_loss))
+                if bootstrap:
+                    list_std_perm.append(bootstrap_var(inter_loss, len(inter_loss), len(inter_loss)))
+                else:
+                    list_std_perm.append(np.std(inter_loss)/ np.sqrt(y.shape[0]))
             out_dict["loss_std"][j] = np.array(list_std_perm)
 
 

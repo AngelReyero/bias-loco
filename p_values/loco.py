@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 from sklearn.base import BaseEstimator, check_is_fitted, clone
 from sklearn.metrics import root_mean_squared_error
 from scipy.stats import norm
-
+from utils import bootstrap_var
 
 
 class LOCO(BaseEstimator):
@@ -152,7 +152,7 @@ class LOCO(BaseEstimator):
 
         return np.stack(out_list, axis=0)
 
-    def score(self, X, y, p_val='corrected_sqrt'):
+    def score(self, X, y, p_val='corrected_sqrt', bootstrap=False):
         """
         Compute the importance scores for each group of covariates.
 
@@ -195,7 +195,10 @@ class LOCO(BaseEstimator):
             inter_loss = []
             for n_t in range(y.shape[0]):
                 inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_j[n_t]]))-loss_reference))
-            out_dict["loss_std"][j] = np.std(inter_loss)
+            if bootstrap:
+                out_dict["loss_std"][j] = (bootstrap_var(inter_loss, len(inter_loss), len(inter_loss)))
+            else:
+                out_dict["loss_std"][j]=(np.std(inter_loss)/ np.sqrt(y.shape[0]))
 
         out_dict["std"] = np.array(
             [
