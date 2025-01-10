@@ -57,7 +57,7 @@ sns.lineplot(data=df,x='intra_cor',y=f'AUC',hue='method',palette=palette)#,style
 
     
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-0.8, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
 plt.subplots_adjust(right=0.75)
 
