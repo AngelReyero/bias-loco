@@ -14,7 +14,7 @@ from utils import toep
 
 
 
-p = 20
+p = 200
 sparsity = 0.2
 method = "lin"
 

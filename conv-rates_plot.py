@@ -26,7 +26,7 @@ sparsity=0.1
 super_learner=True
 y_method="nonlin"
 
-var_to_plot = [0, 1, 2, 3, 6, 7]
+var_to_plot = [0, 1, 6, 7]
 
 
 def theoretical_curve(y_method, coef_to_plot, cor,p, beta=[2, 1]):
@@ -72,9 +72,10 @@ for j in var_to_plot:
 
     #plt.ylim((1e-2,1e3))
     #plt.legend()
-
-    plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
-
+    if j==0:
+        plt.legend(bbox_to_anchor=(-0.8, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+    else:
+        plt.legend().remove() 
     plt.subplots_adjust(right=0.75)
 
     plt.xscale('log')
@@ -83,4 +84,7 @@ for j in var_to_plot:
 
     plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
     plt.xlabel(r'Number of samples',fontsize=15 )
-    plt.savefig(f"visualization/conv_rates_{y_method}_p{p}_cor{cor}_var{j}.pdf", bbox_inches="tight")
+    if super_learner: 
+        plt.savefig(f"visualization/conv_rates_{y_method}_p{p}_cor{cor}_var{j}_super.pdf", bbox_inches="tight")
+    else:
+        plt.savefig(f"visualization/conv_rates_{y_method}_p{p}_cor{cor}_var{j}.pdf", bbox_inches="tight")
