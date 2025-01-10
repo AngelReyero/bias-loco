@@ -53,7 +53,7 @@ sns.lineplot(data=df,x='n_samples',y=f'AUC',hue='method',palette=palette)#,style
 
 plt.xscale('log')
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-0.7, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
 plt.subplots_adjust(right=0.75)
 
@@ -75,12 +75,12 @@ sns.lineplot(data=df,x='n_samples',y=f'null_imp',hue='method',palette=palette)#,
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1.1, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Bias',fontsize=15 )
+plt.ylabel(f'Bias on the null covariates',fontsize=15 )
 plt.xlabel(r'n',fontsize=15 )
 plt.savefig(f"visualization/null_imp_{y_method}_n_p{p}_cor{cor}.pdf", bbox_inches="tight")
 
