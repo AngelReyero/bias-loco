@@ -19,17 +19,17 @@ p=50
 n=1000
 intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
-y_method='nonlin'
+y_method='nonlin2'
 beta= np.array([2, 1])
 super_learner=True
 
-var_to_plot = [0, 1, 6, 7]
+var_to_plot = [0, 1, 10, 11]
 
 
 def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
     if y_method == 'lin':
         return beta[coef_to_plot]**2*(1-intra_cor**2)
-    elif y_method == 'nonlin':
+    elif y_method == 'nonlin' or y_method == 'nonlin2':
         if j >4:
             return [0 for _ in intra_cor]
         elif j==0:
