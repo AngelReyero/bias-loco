@@ -35,7 +35,6 @@ df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_bt.csv",)
 # Display the first few rows of the DataFrame
 print(df.head())
 
-palette = {'r-CPI': 'purple', 'CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red", 'r-CPI2' : "brown"}
 palette = {
     'R-CPI': 'purple',
     'R-CPI_sqrt': 'purple',
@@ -148,12 +147,15 @@ df['type_I'] = type_I
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'AUC',hue='method',style='method', palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+methods_to_plot = ['R-CPI', 'CPI', 'LOCO', 'LOCO-W', 'R-CPI2'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'AUC',hue='method',style='method', palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.yscale('log')  
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-0.8, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
 plt.subplots_adjust(right=0.75)
 
@@ -167,7 +169,9 @@ plt.savefig(f"p_values/visualization/AUC_n_p{p}_cor{cor}_{method}.pdf", bbox_inc
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-sns.lineplot(data=df,x='n',y=f'null_imp',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+methods_to_plot = ['R-CPI', 'CPI', 'LOCO', 'LOCO-W', 'R-CPI2'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'null_imp',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 plt.ylim(-0.1, 0.5)
@@ -185,12 +189,12 @@ plt.savefig(f"p_values/visualization/null_imp_n_p{p}_cor{cor}_{method}.pdf", bbo
 
 
 
-
-
 if method=='lin':
     plt.figure()
     sns.set(rc={'figure.figsize':(4,4)})
-    sns.lineplot(data=df,x='n',y=f'non_null',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+    methods_to_plot = ['R-CPI', 'CPI', 'LOCO', 'LOCO-W', 'R-CPI2'] 
+    filtered_df = df[df['method'].isin(methods_to_plot)]
+    sns.lineplot(data=filtered_df,x='n',y=f'non_null',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
     plt.xscale('log')
     plt.ylim(0, 5)
@@ -215,8 +219,8 @@ sns.lineplot(data=df,x='n',y=f'tr_time',hue='method',style='method',palette=pale
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-#plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
-plt.legend().set_visible(False)
+plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+#plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
@@ -240,6 +244,81 @@ plt.subplots_adjust(right=0.75)
 plt.ylabel(f'Power',fontsize=15 )
 plt.xlabel(r'n',fontsize=15 )
 plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
+
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+methods_to_plot = ['R-CPI', 'R-CPI_sqrt', 'R-CPI_n', 'R-CPI_bt'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+
+plt.legend(bbox_to_anchor=(-1.2, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+#plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Power',fontsize=15 )
+plt.xlabel(r'n',fontsize=15 )
+plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_R-CPI.pdf", bbox_inches="tight")
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+methods_to_plot = ['CPI', 'CPI_sqrt', 'CPI_n', 'CPI_bt'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+
+plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+#plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Power',fontsize=15 )
+plt.xlabel(r'n',fontsize=15 )
+plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_CPI.pdf", bbox_inches="tight")
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+methods_to_plot = ['R-CPI2', 'R-CPI2_sqrt', 'R-CPI2_n', 'R-CPI2_bt'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+
+plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+#plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Power',fontsize=15 )
+plt.xlabel(r'n',fontsize=15 )
+plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_R-CPI2.pdf", bbox_inches="tight")
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+methods_to_plot = ['LOCO', 'LOCO_sqrt', 'LOCO_n', 'LOCO_bt'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+
+plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+#plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Power',fontsize=15 )
+plt.xlabel(r'n',fontsize=15 )
+plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}-LOCO.pdf", bbox_inches="tight")
+
+
 
 
 plt.figure()

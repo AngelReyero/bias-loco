@@ -13,21 +13,22 @@ from sklearn.metrics import mean_squared_error
 from loco import LOCO
 import argparse
 import time
+from utils import GenToysDataset
 
 
 
-p = 200
-ns = [200, 500, 1000, 5000, 10000, 20000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
+p = 50
+ns = [200, 500, 1000, 5000, 10000]#, 5000, 10000, 20000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.2
 
 
 seed= 0
 num_rep=10
 
+y_method='poly'
 
 
-
-cor=0.3
+cor=0.8
 
 cor_meth='toep'
 beta= np.array([2, 1])
@@ -54,13 +55,22 @@ for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,n) in enumerate(ns):
         print("With N="+str(n))
-        true_imp=np.zeros(p)
-        X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed)
-        true_imp[non_zero_index]=1
+        if y_method=='lin':
+            true_imp=np.zeros(p)
+            X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed)
+            true_imp[non_zero_index]=1
+        elif y_method=='poly':
+            X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method="poly", k=2, mu=None, rho_toep=cor,  sparsity=sparsity, seed=seed)
         tr_imp[l, i]=true_imp
         start_time = time.time()
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
-        model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed)
+        if y_method=='lin':
+            model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed)
+        elif y_method =='poly':
+            ntrees = np.arange(100, 300, 100)
+            lr = np.arange(.01, .1, .05)
+            param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
+            model = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 3, n_jobs=n_jobs)
         model.fit(X_train, y_train)
         tr_time = time.time()-start_time
         start_time = time.time()
@@ -183,7 +193,14 @@ for l in range(num_rep):
         #LOCO Williamson
         for j in range(p):
             print("covariate: "+str(j))
-            vimp = vimpy.vim(y = y, x = X, s = j, pred_func = LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed), measure_type = "r_squared")
+            if y_method=='lin':
+                model_j=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed)
+            elif y_method =='poly':
+                ntrees = np.arange(100, 300, 100)
+                lr = np.arange(.01, .1, .05)
+                param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
+                model_j = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 3, n_jobs=n_jobs)
+            vimp = vimpy.vim(y = y, x = X, s = j, pred_func = model_j, measure_type = "r_squared")
             vimp.get_point_est()
             vimp.get_influence_function()
             vimp.get_se()
@@ -246,7 +263,7 @@ for l in range(num_rep):
 
 
 f_res.to_csv(
-    f"p_values/results_csv/lin_n_p{p}_cor{cor}_bt.csv",
+    f"p_values/results_csv/{y_method}_n_p{p}_cor{cor}_bt.csv",
     index=False,
 ) 
 print(f_res.head())
