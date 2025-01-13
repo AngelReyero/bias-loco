@@ -14,9 +14,9 @@ from utils import toep
 
 
 
-p = 200
+p =50
 sparsity = 0.2
-method = "lin"
+method = "poly"
 
 seed= 0
 
@@ -174,7 +174,7 @@ filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df,x='n',y=f'null_imp',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
-plt.ylim(-0.1, 0.5)
+#plt.ylim(-0.1, 5)
 plt.title(f'p = {p} $\\rho$ = {cor}', fontsize=15)
 #plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 plt.legend().set_visible(False)
@@ -206,7 +206,7 @@ if method=='lin':
 
     plt.ylabel(f'Bias non-null covariates',fontsize=15 )
     plt.xlabel(r'n',fontsize=15 )
-    plt.savefig(f"p_values/visualization/non_null_n_p{p}_cor{cor}.pdf", bbox_inches="tight")
+    plt.savefig(f"p_values/visualization/non_null_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 
 
