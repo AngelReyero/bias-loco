@@ -14,16 +14,16 @@ from utils import toep
 
 
 
-p =50
+p =200
 sparsity = 0.2
-method = "poly"
+method = "lin"
 
 seed= 0
 
 
 
 
-cor=0.8
+cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
@@ -174,7 +174,7 @@ filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df,x='n',y=f'null_imp',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
-#plt.ylim(-0.1, 5)
+plt.ylim(-0.1, 0.5)
 plt.title(f'p = {p} $\\rho$ = {cor}', fontsize=15)
 #plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 plt.legend().set_visible(False)

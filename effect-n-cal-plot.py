@@ -58,8 +58,8 @@ for j in var_to_plot:
 
     #plt.ylim((1e-2,1e3))
     #plt.legend()
-
-    plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+    if j==0:
+        plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 
     plt.subplots_adjust(right=0.75)
 
