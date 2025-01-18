@@ -59,15 +59,16 @@ for j in var_to_plot:
     #plt.ylim((1e-2,1e3))
     #plt.legend()
     if j==0:
-        plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
-
+        plt.legend(bbox_to_anchor=(-1, 0.5), loc='center left', borderaxespad=0., fontsize=20)
+    else:
+            plt.legend().remove() 
     plt.subplots_adjust(right=0.75)
 
     #plt.xscale('log')
     #plt.yscale('log')
 
 
-    plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
+    plt.ylabel(f'Importance of $X_{j}$',fontsize=20 )
     plt.xlabel(r'Correlation',fontsize=15 )
     plt.savefig(f"visualization/n_cal_{y_method}_p{p}_n{n}_var{j}.pdf", bbox_inches="tight")
 
