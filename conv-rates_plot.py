@@ -61,7 +61,13 @@ else:
 # Display the first few rows of the DataFrame
 print(df.head())
 
-palette = {'Robust-CPI': 'purple', '0.5*CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
+df = df[df['method'] != 'PFI']
+
+# Change method '0.5CPI' to 'S-CPI'
+df['method'] = df['method'].replace('0.5*CPI', 'Sobol-CPI(1)')
+df['method'] = df['method'].replace('Robust-CPI', 'Sobol-CPI(100)')
+
+palette = {'Sobol-CPI(100)': 'purple', 'Sobol-CPI(1)': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
 
 for j in var_to_plot:
     plt.figure()
@@ -69,11 +75,12 @@ for j in var_to_plot:
     sns.lineplot(data=df,x='n_samples',y=f'imp_V{j}',hue='method',palette=palette)#,style='Regressor',markers=markers, dashes=dashes)
     th_cv= theoretical_curve(y_method, j, cor,p, beta=[2, 1])
     plt.plot(n_samples, [th_cv for _ in n_samples], label=r"Theoretical",linestyle='--', linewidth=1, color="black")
-
+    plt.xticks(fontsize=20)  # X-axis
+    plt.yticks(fontsize=18)
     #plt.ylim((1e-2,1e3))
     #plt.legend()
     if j==0:
-        plt.legend(bbox_to_anchor=(-0.8, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+        plt.legend(bbox_to_anchor=(-1, 0.5), loc='center left', borderaxespad=0., fontsize=17)
     else:
         plt.legend().remove() 
     plt.subplots_adjust(right=0.75)
@@ -82,8 +89,8 @@ for j in var_to_plot:
     #plt.yscale('log')
 
 
-    plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
-    plt.xlabel(r'Number of samples',fontsize=15 )
+    plt.ylabel(f'Importance of $X_{j}$',fontsize=17 )
+    plt.xlabel(r'Number of samples',fontsize=17 )
     if super_learner: 
         plt.savefig(f"visualization/conv_rates_{y_method}_p{p}_cor{cor}_var{j}_super.pdf", bbox_inches="tight")
     else:
