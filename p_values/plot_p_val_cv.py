@@ -14,16 +14,16 @@ from utils import toep
 
 
 
-p =50
+p =200
 sparsity = 0.2
-method = "poly"
+method = "lin"
 
 seed= 0
 
 
 
 
-cor=0.3
+cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
@@ -36,68 +36,68 @@ df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_bt.csv",)
 print(df.head())
 
 palette = {
-    'R-CPI': 'purple',
-    'R-CPI_sqrt': 'purple',
-    'R-CPI_n': 'purple',
-    'CPI': 'blue',
-    'CPI_sqrt': 'blue',
-    'CPI_n': 'blue',
+    'Sobol-CPI(10)': 'purple',
+    'Sobol-CPI(10)_sqrt': 'purple',
+    'Sobol-CPI(10)_n': 'purple',
+    'Sobol-CPI(1)': 'blue',
+    'Sobol-CPI(1)_sqrt': 'blue',
+    'Sobol-CPI(1)_n': 'blue',
     'LOCO-W': 'green',
     'PFI': 'orange',
     'LOCO': 'red',
     'LOCO_n': 'red',
     'LOCO_sqrt': 'red',
-    'R-CPI2': 'cyan',
-    'R-CPI2_sqrt': 'cyan',
-    'R-CPI2_n': 'cyan',
-    'R-CPI_bt': 'purple',
-    'CPI_bt': 'blue',
+    'Sobol-CPI(100)': 'cyan',
+    'Sobol-CPI(100)_sqrt': 'cyan',
+    'Sobol-CPI(100)_n': 'cyan',
+    'Sobol-CPI(10)_bt': 'purple',
+    'Sobol-CPI(1)_bt': 'blue',
     'LOCO_bt': 'red',
-    'R-CPI2_bt': 'cyan',
-
+    'Sobol-CPI(100)_bt': 'cyan',
 }
 
 markers = {
-    'R-CPI':  "o",
-    'R-CPI_sqrt': "^",
-    'R-CPI_n': "D",
-    'CPI':  "o",
-    'CPI_sqrt': "^",
-    'CPI_n': "D",
+    'Sobol-CPI(10)':  "o",
+    'Sobol-CPI(10)_sqrt': "^",
+    'Sobol-CPI(10)_n': "D",
+    'Sobol-CPI(1)':  "o",
+    'Sobol-CPI(1)_sqrt': "^",
+    'Sobol-CPI(1)_n': "D",
     'LOCO-W':  "o",
     'PFI': "D",
     'LOCO':  "o",
     'LOCO_n': "D",
     'LOCO_sqrt': "^",
-    'R-CPI2':  "o",
-    'R-CPI2_sqrt': "^",
-    'R-CPI2_n': "D",
-    'R-CPI_bt': '*',
-    'CPI_bt': '*',
+    'Sobol-CPI(100)':  "o",
+    'Sobol-CPI(100)_sqrt': "^",
+    'Sobol-CPI(100)_n': "D",
+    'Sobol-CPI(10)_bt': '*',
+    'Sobol-CPI(1)_bt': '*',
     'LOCO_bt': '*',
-    'R-CPI2_bt': '*',
-
+    'Sobol-CPI(100)_bt': '*',
 }
+
 dashes = {
-    'R-CPI':  (3, 5, 1, 5),
-    'R-CPI_sqrt': (5, 5),
-    'R-CPI_n': (1, 1),
-    'CPI':  (3, 5, 1, 5),
-    'CPI_sqrt': (5, 5),
-    'CPI_n': (1, 1),
+    'Sobol-CPI(10)':  (3, 5, 1, 5),
+    'Sobol-CPI(10)_sqrt': (5, 5),
+    'Sobol-CPI(10)_n': (1, 1),
+    'Sobol-CPI(1)':  (3, 5, 1, 5),
+    'Sobol-CPI(1)_sqrt': (5, 5),
+    'Sobol-CPI(1)_n': (1, 1),
     'LOCO-W':  (3, 5, 1, 5),
     'PFI': (1, 1),
     'LOCO':  (3, 5, 1, 5),
     'LOCO_n': (1, 1),
     'LOCO_sqrt': (5, 5),
-    'R-CPI2':  (3, 5, 1, 5),
-    'R-CPI2_sqrt': (5, 5),
-    'R-CPI2_n': (1, 1),
-    'R-CPI_bt': (3, 1, 3),
-    'CPI_bt': (3, 1, 3),
+    'Sobol-CPI(100)':  (3, 5, 1, 5),
+    'Sobol-CPI(100)_sqrt': (5, 5),
+    'Sobol-CPI(100)_n': (1, 1),
+    'Sobol-CPI(10)_bt': (3, 1, 3),
+    'Sobol-CPI(1)_bt': (3, 1, 3),
     'LOCO_bt': (3, 1, 3),
-    'R-CPI2_bt': (3, 1, 3),
+    'Sobol-CPI(100)_bt': (3, 1, 3),
 }
+
 
 auc_scores = []
 null_imp = []
@@ -148,20 +148,35 @@ df['type_I'] = type_I
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
 
-methods_to_plot = ['R-CPI', 'CPI', 'LOCO', 'LOCO-W', 'R-CPI2'] 
+
+df['method'] = df['method'].replace('CPI', 'Sobol-CPI(1)')
+df['method'] = df['method'].replace('R-CPI', 'Sobol-CPI(10)')
+df['method'] = df['method'].replace('R-CPI2', 'Sobol-CPI(100)')
+df['method'] = df['method'].replace('CPI_n', 'Sobol-CPI(1)_n')
+df['method'] = df['method'].replace('R-CPI_n', 'Sobol-CPI(10)_n')
+df['method'] = df['method'].replace('R-CPI2_n', 'Sobol-CPI(100)_n')
+df['method'] = df['method'].replace('CPI_sqrt', 'Sobol-CPI(1)_sqrt')
+df['method'] = df['method'].replace('R-CPI_sqrt', 'Sobol-CPI(10)_sqrt')
+df['method'] = df['method'].replace('R-CPI2_sqrt', 'Sobol-CPI(100)_sqrt')
+df['method'] = df['method'].replace('CPI_bt', 'Sobol-CPI(1)_bt')
+df['method'] = df['method'].replace('R-CPI_bt', 'Sobol-CPI(10)_bt')
+df['method'] = df['method'].replace('R-CPI2_bt', 'Sobol-CPI(100)_bt')
+
+methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(10)', 'Sobol-CPI(100)', 'LOCO', 'LOCO-W'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
-sns.lineplot(data=filtered_df,x='n',y=f'AUC',hue='method',style='method', palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+sns.lineplot(data=filtered_df,x='n',y=f'AUC',hue='method',style='method', palette=palette)#, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.yscale('log')  
 
-plt.legend(bbox_to_anchor=(-0.8, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'AUC',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'AUC',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/AUC_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 
@@ -169,20 +184,20 @@ plt.savefig(f"p_values/visualization/AUC_n_p{p}_cor{cor}_{method}.pdf", bbox_inc
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-methods_to_plot = ['R-CPI', 'CPI', 'LOCO', 'LOCO-W', 'R-CPI2'] 
+methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(10)', 'LOCO', 'LOCO-W', 'Sobol-CPI(100)'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
-sns.lineplot(data=filtered_df,x='n',y=f'null_imp',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+sns.lineplot(data=filtered_df,x='n',y=f'null_imp',hue='method',style='method',palette=palette)#, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 plt.ylim(-0.1, 0.5)
-plt.title(f'p = {p} $\\rho$ = {cor}', fontsize=15)
+#plt.title(f'p = {p} $\\rho$ = {cor}', fontsize=15)
 #plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Bias null covariates',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Bias null covariates',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/null_imp_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 
@@ -192,9 +207,9 @@ plt.savefig(f"p_values/visualization/null_imp_n_p{p}_cor{cor}_{method}.pdf", bbo
 if method=='lin':
     plt.figure()
     sns.set(rc={'figure.figsize':(4,4)})
-    methods_to_plot = ['R-CPI', 'CPI', 'LOCO', 'LOCO-W', 'R-CPI2'] 
+    methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(10)', 'Sobol-CPI(100)', 'LOCO', 'LOCO-W'] 
     filtered_df = df[df['method'].isin(methods_to_plot)]
-    sns.lineplot(data=filtered_df,x='n',y=f'non_null',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+    sns.lineplot(data=filtered_df,x='n',y=f'non_null',hue='method',style='method',palette=palette)#, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
     plt.xscale('log')
     plt.ylim(0, 5)
@@ -204,8 +219,8 @@ if method=='lin':
     plt.subplots_adjust(right=0.75)
 
 
-    plt.ylabel(f'Bias non-null covariates',fontsize=15 )
-    plt.xlabel(r'n',fontsize=15 )
+    plt.ylabel(f'Bias non-null covariates',fontsize=17 )
+    plt.xlabel(r'Number of samples',fontsize=17 )
     plt.savefig(f"p_values/visualization/non_null_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 
@@ -217,16 +232,39 @@ sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=df,x='n',y=f'tr_time',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
+plt.yscale('log')
+
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1.50, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Time',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Time',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/time_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
+
+
+plt.figure()
+methods_to_plot = ['Sobol-CPI(1)_bt', 'Sobol-CPI(10)_bt', 'Sobol-CPI(100)_bt', 'LOCO_bt', 'LOCO-W'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.set(rc={'figure.figsize':(4,4)})
+sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette)#, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+
+#plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Power',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
+plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_main.pdf", bbox_inches="tight")
+
+
 
 
 plt.figure()
@@ -241,63 +279,62 @@ plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Power',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Power',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
-
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-methods_to_plot = ['R-CPI', 'R-CPI_sqrt', 'R-CPI_n', 'R-CPI_bt'] 
+methods_to_plot = ['Sobol-CPI(10)', 'Sobol-CPI(10)_sqrt', 'Sobol-CPI(10)_n', 'Sobol-CPI(10)_bt'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.2, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1.5, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Power',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Power',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_R-CPI.pdf", bbox_inches="tight")
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-methods_to_plot = ['CPI', 'CPI_sqrt', 'CPI_n', 'CPI_bt'] 
+methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(1)_sqrt', 'Sobol-CPI(1)_n', 'Sobol-CPI(1)_bt'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1.50, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Power',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Power',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_CPI.pdf", bbox_inches="tight")
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
-methods_to_plot = ['R-CPI2', 'R-CPI2_sqrt', 'R-CPI2_n', 'R-CPI2_bt'] 
+methods_to_plot = ['Sobol-CPI(100)', 'Sobol-CPI(100)_sqrt', 'Sobol-CPI(100)_n', 'Sobol-CPI(100)_bt'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1.50, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Power',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Power',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}_R-CPI2.pdf", bbox_inches="tight")
 
 plt.figure()
@@ -309,13 +346,13 @@ sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palet
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Power',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Power',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/power_n_p{p}_cor{cor}_{method}-LOCO.pdf", bbox_inches="tight")
 
 
@@ -333,8 +370,8 @@ plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
 
-plt.ylabel(f'Type-I error',fontsize=15 )
-plt.xlabel(r'n',fontsize=15 )
+plt.ylabel(f'Type-I error',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization/type_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 
