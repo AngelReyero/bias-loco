@@ -16,14 +16,14 @@ from utils import toep
 
 snr=4
 p=50
-n=1000
+n=10000
 intra_cor=[0,0.15, 0.3, 0.5, 0.65, 0.85]
 cor_meth='toep'
-y_method='nonlin2'
+y_method='nonlin'
 beta= np.array([2, 1])
-super_learner=True
+super_learner=False
 
-var_to_plot = [0, 1, 10, 11]
+var_to_plot = [0, 1, 6, 7]
 
 
 def theoretical_curve(y_method, coef_to_plot, intra_cor, beta=[2, 1]):
@@ -55,7 +55,13 @@ else:
 # Display the first few rows of the DataFrame
 print(df.head())
 
-palette = {'Robust-CPI': 'purple', '0.5*CPI': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
+df = df[df['method'] != 'PFI']
+
+# Change method '0.5CPI' to 'S-CPI'
+df['method'] = df['method'].replace('0.5*CPI', 'Sobol-CPI(1)')
+df['method'] = df['method'].replace('Robust-CPI', 'Sobol-CPI(100)')
+
+palette = {'Sobol-CPI(100)': 'purple', 'Sobol-CPI(1)': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
 
 for j in var_to_plot:
     plt.figure()
@@ -67,8 +73,12 @@ for j in var_to_plot:
     #plt.ylim((1e-2,1e3))
     #plt.legend()
     
+    if j==0:
+        plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=17)
+    else: 
+        plt.legend().set_visible(False)
 
-    plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
+
 
     plt.subplots_adjust(right=0.75)
 
@@ -76,8 +86,8 @@ for j in var_to_plot:
     #plt.yscale('log')
 
 
-    plt.ylabel(f'Importance of $X_{j}$',fontsize=15 )
-    plt.xlabel(r'Correlation',fontsize=15 )
+    plt.ylabel(f'Importance of $X_{j}$',fontsize=17 )
+    plt.xlabel(r'Correlation',fontsize=17 )
     if super_learner:
         plt.savefig(f"visualization/correlation_{y_method}_p{p}_n{n}_var{j}_super.pdf", bbox_inches="tight")
     else:
