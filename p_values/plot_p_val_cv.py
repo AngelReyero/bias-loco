@@ -23,7 +23,7 @@ seed= 0
 
 
 
-cor=0.6
+cor=0.8
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
@@ -236,7 +236,7 @@ plt.yscale('log')
 
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.50, 0.5), loc='center left', borderaxespad=0., fontsize=17)
+plt.legend(bbox_to_anchor=(-1.7, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
@@ -328,7 +328,7 @@ sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palet
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.50, 0.5), loc='center left', borderaxespad=0., fontsize=17)
+plt.legend(bbox_to_anchor=(-1.70, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
