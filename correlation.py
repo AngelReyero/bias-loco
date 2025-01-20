@@ -47,7 +47,7 @@ super_learner=False
 # y_method='nonlin'
 # beta= np.array([2, 1])
 
-n_cal=10
+n_cal=100
 n_jobs=10
 
 best_model=None

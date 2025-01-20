@@ -14,16 +14,16 @@ from utils import toep
 
 
 
-p =200
+p =50
 sparsity = 0.2
-method = "lin"
+method = "poly"
 
 seed= 0
 
 
 
 
-cor=0.6
+cor=0.3
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
