@@ -14,9 +14,9 @@ from utils import toep
 
 
 
-p =200
+p =50
 sparsity = 0.2
-method = "lin"
+method = "poly"
 
 seed= 0
 
@@ -189,7 +189,7 @@ filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df,x='n',y=f'null_imp',hue='method',style='method',palette=palette)#, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
 
 plt.xscale('log')
-plt.ylim(-0.1, 0.5)
+#plt.ylim(-0.1, 0.5)
 #plt.title(f'p = {p} $\\rho$ = {cor}', fontsize=15)
 #plt.legend(bbox_to_anchor=(-1.20, 0.5), loc='center left', borderaxespad=0., fontsize=15)
 plt.legend().set_visible(False)
@@ -292,7 +292,7 @@ sns.lineplot(data=filtered_df,x='n',y=f'power',hue='method',style='method',palet
 plt.xscale('log')
 #plt.ylim(0, 5)
 
-plt.legend(bbox_to_anchor=(-1.5, 0.5), loc='center left', borderaxespad=0., fontsize=17)
+plt.legend(bbox_to_anchor=(-1.7, 0.5), loc='center left', borderaxespad=0., fontsize=17)
 #plt.legend().set_visible(False)
 plt.subplots_adjust(right=0.75)
 
