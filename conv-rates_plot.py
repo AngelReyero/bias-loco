@@ -29,9 +29,9 @@ y_method="nonlin"
 var_to_plot = [0, 1, 6, 7]
 
 
-def theoretical_curve(y_method, coef_to_plot, cor,p, beta=[2, 1]):
+def theoretical_curve(y_method, j, cor,p, beta=[2, 1]):
     if y_method == 'lin':
-        return beta[coef_to_plot]**2*(1-cor**2)
+        return beta[j]**2*(1-cor**2)
     elif y_method == 'nonlin':
         if j >4:
             return 0
