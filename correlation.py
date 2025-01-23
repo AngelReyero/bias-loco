@@ -29,7 +29,7 @@ sparsity = 0.1
 print(f"Running with y_method: {y_method}")
 
 seed= 0
-num_rep=10
+num_rep=30
 
 
 

@@ -14,7 +14,7 @@ from sklearn.metrics import mean_squared_error
 import argparse
 
 seed= 0
-num_rep=10
+num_rep=30
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser()
