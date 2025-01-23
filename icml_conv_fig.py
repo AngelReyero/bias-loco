@@ -139,7 +139,7 @@ ax[1, 1].set_xscale('log')
 ax[1, 1].tick_params(axis='x', labelsize=15)  # Adjust x-axis tick label font size
 ax[1, 1].tick_params(axis='y', labelsize=15) 
 ax[1, 1].set_xlabel(r'')
-ax[1, 1].set_ylabel(f'Bias on the null covariates', fontsize=20)
+ax[1, 1].set_ylabel(f'Bias null covariates', fontsize=20)
 ax[1, 1].legend().remove()
 
 # Adjust subplot layout for better spacing
