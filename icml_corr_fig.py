@@ -52,11 +52,11 @@ for index, row in df.iterrows():
 df['AUC'] = auc_scores
 df['null_imp'] = null_imp
 
-fig, ax = plt.subplots(1,2, figsize=(12, 6))
+fig, ax = plt.subplots(1,2, figsize=(16, 4))
 
 
 # Plot for imp_V0 (top-left subplot)
-sns.set(rc={'figure.figsize':(4,4)})
+sns.set(rc={'figure.figsize':(6,3)})
 sns.lineplot(data=df, x='intra_cor', y='AUC', hue='method', palette=palette, ax=ax[ 0])  # Top-left subplot
 
 
@@ -79,8 +79,8 @@ ax[ 1].legend().remove()
 plt.subplots_adjust(hspace=0.4, wspace=0.3)
 fig.text(0.5, -0.04, 'Correlation', ha='center', fontsize=20)
 
-handles, labels = ax[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc='center left', bbox_to_anchor=(-0.25, 0.5), fontsize=20)
+#handles, labels = ax[0].get_legend_handles_labels()
+#fig.legend(handles, labels, loc='center left', bbox_to_anchor=(-0.25, 0.5), fontsize=20)
 
 
 if super_learner:
