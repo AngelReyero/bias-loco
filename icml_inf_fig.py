@@ -125,7 +125,7 @@ methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(10)', 'Sobol-CPI(100)', 'LOCO', 'L
 filtered_df = df[df['method'].isin(methods_to_plot)]
 
 
-
+sns.set_style("white")
 fig, ax = plt.subplots(2, 2, figsize=(12, 10), gridspec_kw={'hspace': 0.1, 'wspace': 0.3})
 
 
