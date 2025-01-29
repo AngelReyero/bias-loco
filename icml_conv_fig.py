@@ -143,7 +143,8 @@ ax[1, 1].set_ylabel(f'Bias null covariates', fontsize=20)
 ax[1, 1].legend().remove()
 
 # Adjust subplot layout for better spacing
-plt.subplots_adjust(hspace=0.4, wspace=0.3)
+plt.subplots_adjust(hspace=0.4, wspace=0.3, left=0.01, right=0.99)
+
 fig.text(0.5, 0.04, 'Number of samples', ha='center', fontsize=20)
 
 
