@@ -84,7 +84,7 @@ df['method'] = df['method'].replace('Robust-CPI', 'Sobol-CPI(100)')
 
 palette = {'Sobol-CPI(100)': 'purple', 'Sobol-CPI(1)': 'blue', 'LOCO-W':'green', 'PFI':'orange', "LOCO-HD": "red"}
 
-fig, ax = plt.subplots(2, 2, figsize=(12, 10), gridspec_kw={'hspace': 0.1, 'wspace': 0.3})
+fig, ax = plt.subplots(2, 2, figsize=(16, 9), gridspec_kw={'hspace': 0.2, 'wspace': 0.2})
 
 
 

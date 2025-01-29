@@ -105,7 +105,7 @@ df['power'] = power
 df['type_I'] = type_I
 
 plt.figure()
-sns.set(rc={'figure.figsize':(4,4)})
+sns.set(rc={'figure.figsize':(6,3)})
 
 
 df['method'] = df['method'].replace('CPI', 'Sobol-CPI(1)')
@@ -126,12 +126,12 @@ filtered_df = df[df['method'].isin(methods_to_plot)]
 
 
 sns.set_style("white")
-fig, ax = plt.subplots(2, 2, figsize=(12, 10), gridspec_kw={'hspace': 0.1, 'wspace': 0.3})
+fig, ax = plt.subplots(2, 2, figsize=(16, 9), gridspec_kw={'hspace': 0.2, 'wspace': 0.2})
 
 
 
 # Plot for imp_V0 (top-left subplot)
-sns.set(rc={'figure.figsize':(4,4)})
+sns.set(rc={'figure.figsize':(6,3)})
 sns.lineplot(data=df, x='n', y='AUC', hue='method', palette=palette, ax=ax[0, 0])  # Top-left subplot
 
 # Format top-left subplot
@@ -151,7 +151,7 @@ filtered_df = df[df['method'].isin(methods_to_plot)]
 
 
 # Plot for imp_V0 (top-left subplot)
-sns.set(rc={'figure.figsize':(4,4)})
+#sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=filtered_df, x='n', y='non_null', hue='method', palette=palette, ax=ax[0, 1])  # Top-left subplot
 
 # Format top-left subplot
@@ -171,7 +171,7 @@ methods_to_plot = ['Sobol-CPI(1)_bt', 'Sobol-CPI(10)_bt', 'Sobol-CPI(100)_bt', '
 filtered_df = df[df['method'].isin(methods_to_plot)]
 
 
-sns.set(rc={'figure.figsize':(4,4)})
+#sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=filtered_df, x='n', y='power', hue='method', palette=palette, ax=ax[1, 0])  # Top-left subplot
 
 # Format top-left subplot
@@ -182,7 +182,7 @@ ax[1, 0].set_xlabel(r'')
 ax[1, 0].set_ylabel(f'Power', fontsize=20)
 ax[1, 0].legend().remove()
 
-sns.set(rc={'figure.figsize':(4,4)})
+#sns.set(rc={'figure.figsize':(4,4)})
 sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[1, 1])  # Top-left subplot
 
 # Format top-left subplot
