@@ -23,7 +23,7 @@ seed= 0
 
 
 
-cor=0.8
+cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
@@ -191,7 +191,7 @@ df['method'] = df['method'].replace('R-CPI2_bt', 'Sobol-CPI(100)_bt')
 
 
 
-
+sns.set_style("white")
 fig, ax = plt.subplots(2, 2, figsize=(12, 10), gridspec_kw={'hspace': 0.15, 'wspace': 0.2})
 
 methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(1)_sqrt', 'Sobol-CPI(1)_n', 'Sobol-CPI(1)_bt'] 
