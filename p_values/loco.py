@@ -217,5 +217,8 @@ class LOCO(BaseEstimator):
         elif p_val=='corrected_sqrt':
             out_dict["std"] += np.std(y)/np.sqrt(y.shape[0])
             out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
+        elif p_val == 'corrected_sqd':
+            out_dict["std"] += np.std(y)/(y.shape[0]**2)
+            out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
 
         return out_dict
