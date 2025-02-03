@@ -14,7 +14,7 @@ from utils import toep
 
 
 
-p =50
+p =100
 sparsity = 0.2
 method = "lin"
 
@@ -23,7 +23,7 @@ seed= 0
 
 
 
-cor=0.8
+cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
@@ -64,76 +64,54 @@ markers = {
     'Sobol-CPI(10)_sqrt': "^",
     'Sobol-CPI(10)_n': "D",
     'Sobol-CPI(10)_bt': '*',
-    'Sobol-CPI(10)_sqd': 's',
+    'Sobol-CPI(10)_n2': 's',
     
     'Sobol-CPI(1)':  "o",
     'Sobol-CPI(1)_sqrt': "^",
     'Sobol-CPI(1)_n': "D",
     'Sobol-CPI(1)_bt': '*',
-    'Sobol-CPI(1)_sqd': 's',
+    'Sobol-CPI(1)_n2': 's',
     
     'Sobol-CPI(100)':  "o",
     'Sobol-CPI(100)_sqrt': "^",
     'Sobol-CPI(100)_n': "D",
     'Sobol-CPI(100)_bt': '*',
-    'Sobol-CPI(100)_sqd': 's',
+    'Sobol-CPI(100)_n2': 's',
     
     'LOCO-W':  "o",
-    'PFI': "D",
     'LOCO':  "o",
     'LOCO_n': "D",
     'LOCO_sqrt': "^",
     'LOCO_bt': '*',
-    'LOCO_sqd': 's',
+    'LOCO_n2': 's',
 }
 
-dashes = {
-    'Sobol-CPI(10)':  (3, 5, 1, 5),
-    'Sobol-CPI(10)_sqrt': (5, 5),
-    'Sobol-CPI(10)_n': (1, 1),
-    'Sobol-CPI(1)':  (3, 5, 1, 5),
-    'Sobol-CPI(1)_sqrt': (5, 5),
-    'Sobol-CPI(1)_n': (1, 1),
-    'LOCO-W':  (3, 5, 1, 5),
-    'PFI': (1, 1),
-    'LOCO':  (3, 5, 1, 5),
-    'LOCO_n': (1, 1),
-    'LOCO_sqrt': (5, 5),
-    'Sobol-CPI(100)':  (3, 5, 1, 5),
-    'Sobol-CPI(100)_sqrt': (5, 5),
-    'Sobol-CPI(100)_n': (1, 1),
-    'Sobol-CPI(10)_bt': (3, 1, 3),
-    'Sobol-CPI(1)_bt': (3, 1, 3),
-    'LOCO_bt': (3, 1, 3),
-    'Sobol-CPI(100)_bt': (3, 1, 3),
-}
 
 dashes = {
     'Sobol-CPI(10)':  (3, 5, 1, 5),
     'Sobol-CPI(10)_sqrt': (5, 5),
     'Sobol-CPI(10)_n': (1, 1),
     'Sobol-CPI(10)_bt': (3, 1, 3),
-    'Sobol-CPI(10)_sqd': (2, 4),
+    'Sobol-CPI(10)_n2': (2, 4),
     
     'Sobol-CPI(1)':  (3, 5, 1, 5),
     'Sobol-CPI(1)_sqrt': (5, 5),
     'Sobol-CPI(1)_n': (1, 1),
     'Sobol-CPI(1)_bt': (3, 1, 3),
-    'Sobol-CPI(1)_sqd': (2, 4),
+    'Sobol-CPI(1)_n2': (2, 4),
     
     'Sobol-CPI(100)':  (3, 5, 1, 5),
     'Sobol-CPI(100)_sqrt': (5, 5),
     'Sobol-CPI(100)_n': (1, 1),
     'Sobol-CPI(100)_bt': (3, 1, 3),
-    'Sobol-CPI(100)_sqd': (2, 4),
+    'Sobol-CPI(100)_n2': (2, 4),
     
     'LOCO-W':  (3, 5, 1, 5),
-    'PFI': (1, 1),
     'LOCO':  (3, 5, 1, 5),
     'LOCO_n': (1, 1),
     'LOCO_sqrt': (5, 5),
     'LOCO_bt': (3, 1, 3),
-    'LOCO_sqd': (2, 4),
+    'LOCO_n2': (2, 4),
 }
 
 

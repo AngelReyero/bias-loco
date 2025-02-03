@@ -17,13 +17,13 @@ from utils import GenToysDataset
 
 
 
-p = 50
+p = 100
 ns = [200, 500, 1000, 5000, 10000, 20000]#5000, 10000, 15000, 20000, 30000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.2
 
 
 seed= 0
-num_rep=5
+num_rep=10
 
 y_method='lin'
 
@@ -32,12 +32,12 @@ cor=0.6
 
 cor_meth='toep'
 beta= np.array([2, 1])
-snr=2
+snr=0.5
 
 
 n_cal=10
 n_cal2 = 100
-n_jobs=20
+n_jobs=10
 
 best_model=None
 dict_model=None
@@ -57,7 +57,7 @@ for l in range(num_rep):
         print("With N="+str(n))
         if y_method=='lin':
             true_imp=np.zeros(p)
-            X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed)
+            X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed, snr=snr)
             true_imp[non_zero_index]=1
         elif y_method=='poly':
             X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method="poly", k=2, mu=None, rho_toep=cor,  sparsity=sparsity, seed=seed)
