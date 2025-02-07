@@ -7,8 +7,8 @@ import vimpy
 from r_cpi import r_CPI
 import pandas as pd
 from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.kernel_ridge import KernelRidge
 from sklearn.linear_model import LassoCV
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 from loco import LOCO
@@ -18,23 +18,15 @@ from utils import GenToysDataset
 
 
 
-p = 100
-ns = [200, 500, 1000, 5000, 10000, 20000]#5000, 10000, 15000, 20000, 30000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
-sparsity = 0.2
-
+p = 2
+ns = [100, 300, 500, 700, 1000, 2000, 3000]
 
 seed= 0
-num_rep=10
+num_rep=500
 
-y_method='lin'
-regressor_lin= True
+y_method='williamson'
 
 
-cor=0.6
-
-cor_meth='toep'
-beta= np.array([2, 1])
-snr=0.5
 
 
 n_cal=10
@@ -57,46 +49,25 @@ for l in range(num_rep):
     print("Experiment: "+str(l))
     for (i,n) in enumerate(ns):
         print("With N="+str(n))
-        if y_method=='lin':
-            true_imp=np.zeros(p)
-            X, y, _, non_zero_index = simu_data(n, p, rho=cor, sparsity=sparsity, seed=seed, snr=snr)
-            true_imp[non_zero_index]=1
-        elif y_method=='poly':
-            X, y, true_imp = GenToysDataset(n=n, d=p, cor=cor_meth, y_method="poly", k=2, mu=None, rho_toep=cor,  sparsity=sparsity, seed=seed)
+        X, y, true_imp = GenToysDataset(n=n, d=p, y_method = "williamson", seed=seed)
         tr_imp[l, i]=true_imp
         start_time = time.time()
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
-        if regressor_lin:
-            model=LinearRegression()
-        elif y_method=='lin':
-            model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed)
-        elif y_method =='poly':
-            ntrees = np.arange(100, 300, 100)
-            lr = np.arange(.01, .1, .05)
-            param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
-            model = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 3, n_jobs=n_jobs)
+        model_template = KernelRidge(kernel="rbf")
+        param_grid = {"alpha": [0.01, 0.1, 1, 10],  "gamma": [0.1, 0.5, 1, 5]}
+        model = GridSearchCV(model_template, param_grid, cv=5, scoring="neg_mean_squared_error")
         model.fit(X_train, y_train)
         tr_time = time.time()-start_time
-        if regressor_lin:
-            start_time = time.time()
-            rob_cpi= r_CPI(
-                estimator=model,
-                imputation_model=LinearRegression(),
-                n_permutations=1,
-                random_state=seed,
-                n_jobs=n_jobs)
-            rob_cpi.fit(X_train, y_train)
-            imp_time = time.time()-start_time
-        else: 
-            start_time = time.time()
-            rob_cpi= r_CPI(
-                estimator=model,
-                imputation_model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed),
-                n_permutations=1,
-                random_state=seed,
-                n_jobs=n_jobs)
-            rob_cpi.fit(X_train, y_train)
-            imp_time = time.time()-start_time
+        start_time = time.time()
+        imputation_template = KernelRidge(kernel="rbf")
+        rob_cpi= r_CPI(
+            estimator=model,
+            imputation_model=GridSearchCV(model_template, param_grid, cv=5, scoring="neg_mean_squared_error"),#LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed),
+            n_permutations=1,
+            random_state=seed,
+            n_jobs=n_jobs)
+        rob_cpi.fit(X_train, y_train)
+        imp_time = time.time()-start_time
 
         start_time = time.time()
         cpi_importance = rob_cpi.score(X_test, y_test, n_cal=1,  p_val='emp_var')
@@ -234,15 +205,8 @@ for l in range(num_rep):
         #LOCO Williamson
         for j in range(p):
             print("covariate: "+str(j))
-            if regressor_lin:
-                model_j=LinearRegression()
-            elif y_method=='lin':
-                model_j=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed)
-            elif y_method =='poly':
-                ntrees = np.arange(100, 300, 100)
-                lr = np.arange(.01, .1, .05)
-                param_grid = [{'n_estimators':ntrees, 'learning_rate':lr}]
-                model_j = GridSearchCV(GradientBoostingRegressor(loss = 'squared_error', max_depth = 3), param_grid = param_grid, cv = 3, n_jobs=n_jobs)
+            model_template_j = KernelRidge(kernel="rbf")
+            model_j = GridSearchCV(model_template_j, param_grid, cv=5, scoring="neg_mean_squared_error")
             vimp = vimpy.vim(y = y, x = X, s = j, pred_func = model_j, measure_type = "r_squared")
             vimp.get_point_est()
             vimp.get_influence_function()
@@ -312,14 +276,9 @@ for l in range(num_rep):
             f_res1=pd.DataFrame(f_res1)
             f_res=pd.concat([f_res, f_res1], ignore_index=True)
 
-if regressor_lin:
- f_res.to_csv(
-        f"p_values/results_csv/{y_method}_n_p{p}_cor{cor}_sqd_LR.csv",
-        index=False,
-    ) 
-else: 
-    f_res.to_csv(
-        f"p_values/results_csv/{y_method}_n_p{p}_cor{cor}_sqd.csv",
-        index=False,
-    ) 
+
+f_res.to_csv(
+    f"p_values/fails_csv/{y_method}_sqd.csv",
+    index=False,
+) 
 print(f_res.head())

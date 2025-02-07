@@ -198,6 +198,13 @@ def toep (d, rho=0.6):
 
 def GenToysDataset(n=1000, d=10, cor='toep', y_method="nonlin", k=2, mu=None, rho_toep=0.6, sparsity=0.1, seed=0, snr=2):
     true_imp=np.zeros(d)
+    if y_method=="williamson":
+        X1 = np.random.uniform(-1, 1, n)
+        X2 = np.random.uniform(-1, 1, n)
+        X = np.column_stack((X1, X2))
+        epsilon = np.random.normal(0, 1, n)
+        y = (25/9) * X1**2+ epsilon
+        return X, y, np.array([1, 0])
     if y_method=="hidimstats":
         X, y, _, non_zero_index = simu_data(n, d, rho=rho_toep, sparsity=sparsity, seed=seed, snr=snr)
         true_imp[non_zero_index]=1
