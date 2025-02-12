@@ -20,21 +20,20 @@ from utils import GenToysDataset
 
 p = 100
 ns = [200, 500, 1000, 5000, 10000, 20000]#5000, 10000, 15000, 20000, 30000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
-sparsity = 0.2
+sparsity = 0.25
 
 
 seed= 0
 num_rep=10
 
-y_method='lin'
-regressor_lin= True
+y_method='poly'
+regressor_lin= False
 
 
 cor=0.6
 
 cor_meth='toep'
-beta= np.array([2, 1])
-snr=0.5
+snr=2
 
 
 n_cal=10
@@ -46,11 +45,11 @@ dict_model=None
 
 rng = np.random.RandomState(seed)
 
-imp2=np.zeros((21,num_rep, len(ns), p))# 5 because there is 5 methods
+imp2=np.zeros((22,num_rep, len(ns), p))# 5 because there is 5 methods
 tr_imp=np.zeros((num_rep, len(ns), p))
-p_val=np.zeros((21,num_rep, len(ns), p))# 5 because there is 5 methods
-tim = np.zeros((21, num_rep, len(ns)))
-# 0 LOCO-W, 1-4 CPI (-, sqrt, n, bootstrap), 5-8 R-CPI(-, sqrt, n, bootstrap), 9-12 R-CPI2 (-, sqrt, n, bootstrap), 13-16 LOCO
+p_val=np.zeros((22,num_rep, len(ns), p))# 5 because there is 5 methods
+tim = np.zeros((22, num_rep, len(ns)))
+# 0 LOCO-W, 1-5 CPI (-, sqrt, n, bootstrap, CRT), 5-8 R-CPI(-, sqrt, n, bootstrap), 9-12 R-CPI2 (-, sqrt, n, bootstrap), 13-16 LOCO
 
 for l in range(num_rep):
     seed+=1
@@ -128,6 +127,11 @@ for l in range(num_rep):
         imp2[5,l,i]= cpi_importance["importance"].reshape((p,))
         p_val[5,l,i]= cpi_importance["pval"].reshape((p,))
 
+        start_time = time.time()
+        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=1,  p_val='CRT')
+        tim[21, l, i] = time.time() - start_time + tr_time + imp_time
+        imp2[21,l,i]= cpi_importance["importance"].reshape((p,))
+        p_val[21,l,i]= cpi_importance["pval"].reshape((p,))
 
         start_time = time.time()
         cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal,  p_val='emp_var')
@@ -258,7 +262,7 @@ for l in range(num_rep):
 f_res={}
 f_res = pd.DataFrame(f_res)
 for l in range(num_rep):
-    for i in range(21):
+    for i in range(22):
         for j in range(len(ns)):
             f_res1={}
             if i==0:
@@ -303,6 +307,8 @@ for l in range(num_rep):
                 f_res1["method"] = ["LOCO_bt"]
             elif i==20:
                 f_res1["method"] = ["LOCO_sqd"]
+            elif i==21:
+                f_res1["method"] = ["CRT"]
             f_res1["n"]=ns[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
@@ -319,7 +325,7 @@ if regressor_lin:
     ) 
 else: 
     f_res.to_csv(
-        f"p_values/results_csv/{y_method}_n_p{p}_cor{cor}_sqd.csv",
+        f"p_values/results_csv/{y_method}_n_p{p}_cor{cor}_sqd_crt.csv",
         index=False,
     ) 
 print(f_res.head())

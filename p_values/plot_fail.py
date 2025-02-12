@@ -177,6 +177,30 @@ plt.savefig(f"p_values/visualization_fail/AUC.pdf", bbox_inches="tight")
 
 
 
+plt.figure()
+methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(10)', 'Sobol-CPI(100)', 'LOCO', 'LOCO-W'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+
+sns.lineplot(data=filtered_df,x='n',y=f'type_I',hue='method',style='method', palette=palette)#, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.yscale('log')  
+
+plt.legend(bbox_to_anchor=(-1, 0.5), loc='center left', borderaxespad=0., fontsize=17)
+
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'Type-I error',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
+plt.savefig(f"p_values/visualization_fail/type_non_corr.pdf", bbox_inches="tight")
+
+
+
+
+
+
+
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})
@@ -332,6 +356,27 @@ plt.subplots_adjust(right=0.75)
 plt.ylabel(f'Power',fontsize=17 )
 plt.xlabel(r'Number of samples',fontsize=17 )
 plt.savefig(f"p_values/visualization_fail/power_CPI.pdf", bbox_inches="tight")
+
+
+plt.figure()
+sns.set(rc={'figure.figsize':(4,4)})
+methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(1)_sqrt', 'Sobol-CPI(1)_n', 'Sobol-CPI(1)_n2', 'Sobol-CPI(1)_bt'] 
+filtered_df = df[df['method'].isin(methods_to_plot)]
+sns.lineplot(data=filtered_df,x='n',y=f'type_I',hue='method',style='method',palette=palette, markers=markers, dashes=dashes)#,style='Regressor',markers=markers, dashes=dashes)
+
+plt.xscale('log')
+#plt.ylim(0, 5)
+
+plt.legend(bbox_to_anchor=(-1.50, 0.5), loc='center left', borderaxespad=0., fontsize=17)
+#plt.legend().set_visible(False)
+plt.subplots_adjust(right=0.75)
+
+
+plt.ylabel(f'type-I error',fontsize=17 )
+plt.xlabel(r'Number of samples',fontsize=17 )
+plt.savefig(f"p_values/visualization_fail/type_CPI.pdf", bbox_inches="tight")
+
+
 
 plt.figure()
 sns.set(rc={'figure.figsize':(4,4)})

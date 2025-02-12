@@ -228,7 +228,10 @@ class r_CPI(BaseEstimator):
 
         loss_reference = self.loss(y_true=y, y_pred=y_pred)
         out_dict["loss_reference"] = loss_reference
-
+        loss_coord_by_coord=[]
+        for n_t in range(y.shape[0]):
+            loss_coord_by_coord.append(self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred[n_t]])))
+        loss_coord_by_coord=np.array(loss_coord_by_coord)
         y_pred_perm = self.predict(X, y, n_cal=n_cal)
 
         out_dict["loss_perm"] = dict()
@@ -239,16 +242,22 @@ class r_CPI(BaseEstimator):
             out_dict["loss_perm"][j] = np.array(list_loss_perm)
 
         out_dict["loss_std"] = dict()
+        crt=[]
         for j, y_pred_j in enumerate(y_pred_perm):
             list_std_perm = []
-            for y_pred_perm in y_pred_j:
+            crt_j=1
+            for y_pred_j_perm in y_pred_j:
                 inter_loss = []
                 for n_t in range(y.shape[0]):
-                    inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_perm[n_t]]))-loss_reference)*n_cal/(n_cal+1))
+                    inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_j_perm[n_t]]))-loss_coord_by_coord[n_t])*n_cal/(n_cal+1))            
                 if bootstrap:
                     list_std_perm.append(bootstrap_var(inter_loss, len(inter_loss), len(inter_loss)))
                 else:
                     list_std_perm.append(np.std(inter_loss)/ np.sqrt(y.shape[0]))
+                if p_val=='CRT':
+                    inter_loss=np.array(inter_loss)
+                    crt_j+=sum(inter_loss>=0)
+            crt.append(crt_j/(1+n_t*self.n_permutations))
             out_dict["loss_std"][j] = np.array(list_std_perm)
 
 
@@ -278,4 +287,6 @@ class r_CPI(BaseEstimator):
         elif p_val == 'corrected_sqd':
             out_dict["std"] += np.std(y)/(y.shape[0]**2)
             out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
+        elif p_val == 'CRT':
+            out_dict['pval']=np.array(crt)
         return out_dict

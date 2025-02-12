@@ -29,7 +29,7 @@ beta= np.array([2, 1])
 snr=2
 alpha = 0.05
 
-df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_sqd.csv",)
+df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_sqd_crt.csv",)
 
 
 # Display the first few rows of the DataFrame
@@ -57,6 +57,7 @@ palette = {
     'Sobol-CPI(1)_bt': 'blue',
     'LOCO_bt': 'red',
     'Sobol-CPI(100)_bt': 'cyan',
+    'CRT':'black'
 }
 
 markers = {
@@ -84,6 +85,8 @@ markers = {
     'LOCO_sqrt': "^",
     'LOCO_bt': '*',
     'LOCO_n2': 's',
+
+    'CRT':'o',
 }
 
 
@@ -112,6 +115,8 @@ dashes = {
     'LOCO_sqrt': (5, 5),
     'LOCO_bt': (3, 1, 3),
     'LOCO_n2': (2, 4),
+
+    'CRT':(1)
 }
 
 
