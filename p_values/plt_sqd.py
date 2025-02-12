@@ -14,7 +14,7 @@ from utils import toep
 
 
 
-p =200
+p =100
 sparsity = 0.2
 method = "lin"
 
@@ -27,7 +27,7 @@ cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
-alpha = 0.05
+alpha = 0.1
 
 df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_sqd_crt.csv",)
 
@@ -116,7 +116,7 @@ dashes = {
     'LOCO_bt': (3, 1, 3),
     'LOCO_n2': (2, 4),
 
-    'CRT':(1)
+    'CRT':(1, 1)
 }
 
 

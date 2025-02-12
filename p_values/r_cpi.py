@@ -256,8 +256,8 @@ class r_CPI(BaseEstimator):
                     list_std_perm.append(np.std(inter_loss)/ np.sqrt(y.shape[0]))
                 if p_val=='CRT':
                     inter_loss=np.array(inter_loss)
-                    crt_j+=sum(inter_loss>=0)
-            crt.append(crt_j/(1+n_t*self.n_permutations))
+                    crt_j+=sum(inter_loss<=0)
+            crt.append(crt_j/(1+y.shape[0]*self.n_permutations))
             out_dict["loss_std"][j] = np.array(list_std_perm)
 
 
