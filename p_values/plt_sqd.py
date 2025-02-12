@@ -22,7 +22,8 @@ seed= 0
 
 
 
-
+n_hist=1000
+hist_p_val=True
 cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
@@ -139,6 +140,8 @@ if method=='lin':
             @ Sigma_without_j[i, :].T
         )
         
+p_val_null=[]
+p_val_nonnull=[]
 
 # Iterate through each row of the DataFrame
 for index, row in df.iterrows():
@@ -155,7 +158,24 @@ for index, row in df.iterrows():
         non_null.append(np.mean(abs(y_pred[y==1]-cond_v[y==1])))
     power.append(sum(selected[y==1])/sum(y==1))
     type_I.append(sum(selected[y==0])/sum(y==0))
+    if row["method"]=='CRT' and row['n']==n_hist:
+        p_val_null.append(pval[y==0])
+        p_val_nonnull.append(pval[y==1])
 
+
+if hist_p_val:
+    plt.figure()
+    plt.hist(p_val_null, bins=20, edgecolor='black', alpha=0.7)
+    plt.ylabel(f'Frequecy',fontsize=17 )
+    plt.xlabel(r'p-val null covariates',fontsize=17 )
+    plt.savefig(f"p_values/visualization/p_val_null_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
+
+
+    plt.figure()
+    plt.hist(p_val_nonnull, bins=20, edgecolor='black', alpha=0.7)
+    plt.ylabel(f'Frequecy',fontsize=17 )
+    plt.xlabel(r'p-val non null covariates',fontsize=17 )
+    plt.savefig(f"p_values/visualization/p_val_nonnull_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 
 # Add the AUC scores as a new column to the DataFrame
