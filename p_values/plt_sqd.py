@@ -28,7 +28,7 @@ cor=0.6
 cor_meth='toep'
 beta= np.array([2, 1])
 snr=2
-alpha = 0.1
+alpha = 0.05
 
 df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_sqd_crt.csv",)
 

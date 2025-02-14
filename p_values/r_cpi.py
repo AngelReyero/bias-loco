@@ -194,7 +194,7 @@ class r_CPI(BaseEstimator):
         residual_permuted_y_pred = np.stack(out_list, axis=0)
         return residual_permuted_y_pred
 
-    def score(self, X, y, n_cal=10, p_val='corrected_n', bootstrap=False, admit_error=10e-6, size_bootstrap=5):
+    def score(self, X, y, n_cal=10, p_val='corrected_n', bootstrap=False, admit_error=10e-6, size_bootstrap=40):
         """
         Compute the importance scores for each group of covariates.
 
