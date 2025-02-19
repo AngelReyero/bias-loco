@@ -14,15 +14,15 @@ from utils import toep
 
 
 
-p =100
-sparsity = 0.2
-method = "lin"
+p =50
+sparsity = 0.25
+method = "poly"
 
 seed= 0
 
 
 
-n_hist=1000
+n_hist=20000
 hist_p_val=True
 cor=0.6
 cor_meth='toep'

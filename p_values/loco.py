@@ -181,7 +181,10 @@ class LOCO(BaseEstimator):
 
         loss_reference = self.loss(y_true=y, y_pred=y_pred)
         out_dict["loss_reference"] = loss_reference
-
+        loss_coord_by_coord=[]
+        for n_t in range(y.shape[0]):
+            loss_coord_by_coord.append(self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred[n_t]])))
+        loss_coord_by_coord=np.array(loss_coord_by_coord)
         y_pred_loco = self.predict(X, y)
 
         out_dict["loss_loco"] = np.array(
@@ -194,7 +197,7 @@ class LOCO(BaseEstimator):
         for j, y_pred_j in enumerate(y_pred_loco):
             inter_loss = []
             for n_t in range(y.shape[0]):
-                inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_j[n_t]]))-loss_reference))
+                inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_j[n_t]]))-loss_coord_by_coord[n_t]))
             if bootstrap:
                 out_dict["loss_std"][j] = (bootstrap_var(inter_loss, len(inter_loss), len(inter_loss)))
             else:
