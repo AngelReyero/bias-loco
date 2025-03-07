@@ -194,7 +194,7 @@ class r_CPI(BaseEstimator):
         residual_permuted_y_pred = np.stack(out_list, axis=0)
         return residual_permuted_y_pred
 
-    def score(self, X, y, n_cal=10, p_val='corrected_n', bootstrap=False, admit_error=10e-6, size_bootstrap=250):
+    def score(self, X, y, n_cal=10, p_val='corrected_n', bootstrap=False, admit_error=10e-6, size_bootstrap=250, B=2000):
         """
         Compute the importance scores for each group of covariates.
 
@@ -247,6 +247,7 @@ class r_CPI(BaseEstimator):
         for j, y_pred_j in enumerate(y_pred_perm):
             list_std_perm = []
             crt_j=1
+            loss_perm=[]
             for y_pred_j_perm in y_pred_j:
                 inter_loss = []
                 for n_t in range(y.shape[0]):
@@ -255,12 +256,13 @@ class r_CPI(BaseEstimator):
                     list_std_perm.append(bootstrap_var(inter_loss, len(inter_loss), len(inter_loss)))
                 else:
                     list_std_perm.append(np.std(inter_loss)/ np.sqrt(y.shape[0]))
-                if p_val=='CRT':
-                    inter_loss=np.array([np.mean(np.random.choice(inter_loss, size_bootstrap, replace=True)) for _ in range(y.shape[0])])
-                    #inter_loss=np.array(inter_loss)
-                    crt_j+=sum(inter_loss<=admit_error)
-                    #crt_j+=random.uniform(0, sum(abs(inter_loss)<=admit_error))
-            crt.append(crt_j/(1+y.shape[0]*self.n_permutations))
+                loss_perm.extend(inter_loss)
+            if p_val=='CRT':
+                inter_loss=np.array([np.mean(np.random.choice(loss_perm, size_bootstrap, replace=True)) for _ in range(B)])
+                #inter_loss=np.array(inter_loss)
+                crt_j+=sum(inter_loss<=admit_error)
+                #crt_j+=random.uniform(0, sum(abs(inter_loss)<=admit_error))
+            crt.append(crt_j/(1+B))
             out_dict["loss_std"][j] = np.array(list_std_perm)
 
 

@@ -18,15 +18,15 @@ from utils import GenToysDataset
 
 
 
-p = 100
+p = 50
 ns = [200, 500, 1000, 5000, 10000, 20000]#, 30000, 50000]#5000, 10000, 15000, 20000, 30000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.25
 
-
+n_perm_crt=100
 seed= 0
 num_rep=50
 
-y_method='lin'
+y_method='poly'
 regressor_lin= False
 
 
@@ -128,10 +128,20 @@ for l in range(num_rep):
         p_val[5,l,i]= cpi_importance["pval"].reshape((p,))
 
         start_time = time.time()
-        cpi_importance = rob_cpi.score(X_test, y_test, n_cal=1,  p_val='CRT')
-        tim[21, l, i] = time.time() - start_time + tr_time + imp_time
-        imp2[21,l,i]= cpi_importance["importance"].reshape((p,))
-        p_val[21,l,i]= cpi_importance["pval"].reshape((p,))
+        crt_cpi= r_CPI(
+            estimator=model,
+            imputation_model=LassoCV(alphas=np.logspace(-3, 3, 10), cv=5, random_state=seed),
+            n_permutations=n_perm_crt,
+            random_state=seed,
+            n_jobs=n_jobs)
+        crt_cpi.fit(X_train, y_train)
+        imp_crt_time = time.time()-start_time
+    
+        start_time = time.time()
+        crt_cpi_importance = crt_cpi.score(X_test, y_test, n_cal=1,  p_val='CRT', size_bootstrap=n//10)
+        tim[21, l, i] = time.time() - start_time + tr_time + imp_crt_time
+        imp2[21,l,i]= crt_cpi_importance["importance"].reshape((p,))
+        p_val[21,l,i]= crt_cpi_importance["pval"].reshape((p,))
 
         start_time = time.time()
         cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal,  p_val='emp_var')
