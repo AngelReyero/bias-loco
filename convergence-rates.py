@@ -107,7 +107,6 @@ for l in range(num_rep):
             vimp.get_ci()
             vimp.hypothesis_test(alpha = 0.05, delta = 0)
             imp2[2,l,i,j]+=vimp.vimp_*np.var(y)
-        #LOCO Hidimstat
 
         loco = LOCO(
             estimator=model,

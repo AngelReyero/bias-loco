@@ -58,7 +58,9 @@ palette = {
     'Sobol-CPI(1)_bt': 'blue',
     'LOCO_bt': 'red',
     'Sobol-CPI(100)_bt': 'cyan',
-    'CRT':'black'
+    'CRT':'black',
+    'binom_CRT':'brown'
+
 }
 
 markers = {
@@ -88,6 +90,8 @@ markers = {
     'LOCO_n2': 's',
 
     'CRT':'o',
+    'binom_CRT':'^',
+
 }
 
 
@@ -117,7 +121,9 @@ dashes = {
     'LOCO_bt': (3, 1, 3),
     'LOCO_n2': (2, 4),
 
-    'CRT':(1, 1)
+    'CRT':(1, 1),
+    'binom_CRT':(1, 1)
+
 }
 
 
@@ -143,6 +149,9 @@ if method=='lin':
 p_val_null=[]
 p_val_nonnull=[]
 
+p_val_null_binom=[]
+p_val_nonnull_binom=[]
+
 # Iterate through each row of the DataFrame
 for index, row in df.iterrows():
     # Extract the predictions for the current experiment (as a list)
@@ -161,6 +170,9 @@ for index, row in df.iterrows():
     if row["method"]=='CRT' and row['n']==n_hist:
         p_val_null.append(pval[y==0])
         p_val_nonnull.append(pval[y==1])
+    if row["method"]=='binom_CRT' and row['n']==n_hist:
+        p_val_null_binom.append(pval[y==0])
+        p_val_nonnull_binom.append(pval[y==1])
 
 
 if hist_p_val:
@@ -177,6 +189,19 @@ if hist_p_val:
     plt.xlabel(r'p-val non null covariates',fontsize=17 )
     plt.savefig(f"p_values/visualization/p_val_nonnull_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
+if hist_p_val:
+    plt.figure()
+    plt.hist(p_val_null_binom, bins=20, edgecolor='black', alpha=0.7)
+    plt.ylabel(f'Frequecy',fontsize=17 )
+    plt.xlabel(r'p-val null covariates',fontsize=17 )
+    plt.savefig(f"p_values/visualization/p_val_null_binom_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
+
+
+    plt.figure()
+    plt.hist(p_val_nonnull_binom, bins=20, edgecolor='black', alpha=0.7)
+    plt.ylabel(f'Frequecy',fontsize=17 )
+    plt.xlabel(r'p-val non null covariates',fontsize=17 )
+    plt.savefig(f"p_values/visualization/p_val_nonnull_binom_n_p{p}_cor{cor}_{method}.pdf", bbox_inches="tight")
 
 # Add the AUC scores as a new column to the DataFrame
 df['AUC'] = auc_scores

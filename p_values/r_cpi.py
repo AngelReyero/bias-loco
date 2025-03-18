@@ -3,7 +3,7 @@ import pandas as pd
 from joblib import Parallel, delayed
 from sklearn.base import BaseEstimator, check_is_fitted, clone
 from sklearn.metrics import mean_squared_error
-from scipy.stats import norm
+from scipy.stats import norm, binom
 from utils import bootstrap_var
 import random
 
@@ -244,18 +244,22 @@ class r_CPI(BaseEstimator):
 
         out_dict["loss_std"] = dict()
         crt=[]
+        binom_crt=[]
         for j, y_pred_j in enumerate(y_pred_perm):
             list_std_perm = []
             crt_j=1
             loss_perm=[]
+            binom_crt_j=0
             for y_pred_j_perm in y_pred_j:
                 inter_loss = []
                 for n_t in range(y.shape[0]):
-                    inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_j_perm[n_t]]))-loss_coord_by_coord[n_t])*n_cal/(n_cal+1))            
+                    inter_loss.append((self.loss(y_true=np.array([y[n_t]]), y_pred=np.array([y_pred_j_perm[n_t]]))-loss_coord_by_coord[n_t])*n_cal/(n_cal+1))           
                 if bootstrap:
                     list_std_perm.append(bootstrap_var(inter_loss, len(inter_loss), len(inter_loss)))
                 else:
                     list_std_perm.append(np.std(inter_loss)/ np.sqrt(y.shape[0]))
+                if p_val=='binom_crt':
+                    binom_crt_j+=sum(np.array(inter_loss)>0) 
                 loss_perm.extend(inter_loss)
             if p_val=='CRT':
                 inter_loss=np.array([np.mean(np.random.choice(loss_perm, size_bootstrap, replace=True)) for _ in range(B)])
@@ -263,6 +267,7 @@ class r_CPI(BaseEstimator):
                 crt_j+=sum(inter_loss<=admit_error)
                 #crt_j+=random.uniform(0, sum(abs(inter_loss)<=admit_error))
             crt.append(crt_j/(1+B))
+            binom_crt.append(binom.sf(binom_crt_j - 1, y_pred_j.size, 0.5))
             out_dict["loss_std"][j] = np.array(list_std_perm)
 
 
@@ -294,4 +299,6 @@ class r_CPI(BaseEstimator):
             out_dict['pval']=norm.sf(out_dict["importance"] / (out_dict["std"]))
         elif p_val == 'CRT':
             out_dict['pval']=np.array(crt)
+        elif p_val == 'binom_crt':
+            out_dict['pval']=np.array(binom_crt)
         return out_dict

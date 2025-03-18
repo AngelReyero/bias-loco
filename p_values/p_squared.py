@@ -18,15 +18,15 @@ from utils import GenToysDataset
 
 
 
-p = 50
+p = 100
 ns = [200, 500, 1000, 5000, 10000, 20000]#, 30000, 50000]#5000, 10000, 15000, 20000, 30000]#[100, 300, 500, 700, 1000, 2000, 5000, 10000]
 sparsity = 0.25
 
 n_perm_crt=100
 seed= 0
-num_rep=50
+num_rep=10
 
-y_method='poly'
+y_method='lin'
 regressor_lin= False
 
 
@@ -45,10 +45,10 @@ dict_model=None
 
 rng = np.random.RandomState(seed)
 
-imp2=np.zeros((22,num_rep, len(ns), p))# 5 because there is 5 methods
+imp2=np.zeros((23,num_rep, len(ns), p))# 5 because there is 5 methods
 tr_imp=np.zeros((num_rep, len(ns), p))
-p_val=np.zeros((22,num_rep, len(ns), p))# 5 because there is 5 methods
-tim = np.zeros((22, num_rep, len(ns)))
+p_val=np.zeros((23,num_rep, len(ns), p))# 5 because there is 5 methods
+tim = np.zeros((23, num_rep, len(ns)))
 # 0 LOCO-W, 1-5 CPI (-, sqrt, n, bootstrap, CRT), 5-8 R-CPI(-, sqrt, n, bootstrap), 9-12 R-CPI2 (-, sqrt, n, bootstrap), 13-16 LOCO
 
 for l in range(num_rep):
@@ -142,6 +142,12 @@ for l in range(num_rep):
         tim[21, l, i] = time.time() - start_time + tr_time + imp_crt_time
         imp2[21,l,i]= crt_cpi_importance["importance"].reshape((p,))
         p_val[21,l,i]= crt_cpi_importance["pval"].reshape((p,))
+
+        start_time = time.time()
+        crt_cpi_importance = crt_cpi.score(X_test, y_test, n_cal=1,  p_val='binom_crt')
+        tim[22, l, i] = time.time() - start_time + tr_time + imp_crt_time
+        imp2[22,l,i]= crt_cpi_importance["importance"].reshape((p,))
+        p_val[22,l,i]= crt_cpi_importance["pval"].reshape((p,))
 
         start_time = time.time()
         cpi_importance = rob_cpi.score(X_test, y_test, n_cal=n_cal,  p_val='emp_var')
@@ -272,7 +278,7 @@ for l in range(num_rep):
 f_res={}
 f_res = pd.DataFrame(f_res)
 for l in range(num_rep):
-    for i in range(22):
+    for i in range(23):
         for j in range(len(ns)):
             f_res1={}
             if i==0:
@@ -319,6 +325,8 @@ for l in range(num_rep):
                 f_res1["method"] = ["LOCO_sqd"]
             elif i==21:
                 f_res1["method"] = ["CRT"]
+            elif i==22:
+                f_res1["method"] = ["binom_CRT"]
             f_res1["n"]=ns[j]
             for k in range(p):
                 f_res1["imp_V"+str(k)]=imp2[i,l, j, k]
