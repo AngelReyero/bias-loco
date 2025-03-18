@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 import pandas as pd
-import argparse
 
 import sys
 import os
@@ -14,22 +13,14 @@ from utils import toep
 
 
 
-p =200
-sparsity = 0.2
-method = "lin"
-
-seed= 0
-
-
-
+p =50
+method = "poly"
 
 cor=0.6
-cor_meth='toep'
-beta= np.array([2, 1])
-snr=2
+
 alpha = 0.05
 
-df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_bt.csv",)
+df = pd.read_csv(f"p_values/results_csv/{method}_n_p{p}_cor{cor}_sqd_crt.csv",)
 
 
 # Display the first few rows of the DataFrame
