@@ -14,9 +14,9 @@ from utils import toep
 
 
 
-p =100
+p =50
 sparsity = 0.25
-method = "lin"
+method = "poly"
 
 seed= 0
 
@@ -57,6 +57,7 @@ palette = {
     'Sobol-CPI(1)_bt': 'blue',
     'LOCO_bt': 'red',
     'Sobol-CPI(100)_bt': 'cyan',
+    'HRT': 'brown'
 
 }
 
@@ -86,6 +87,9 @@ markers = {
     'LOCO_bt': '*',
     'LOCO_n2': 's',
 
+    'HRT':'o',
+
+
 }
 
 
@@ -114,6 +118,7 @@ dashes = {
     'LOCO_sqrt': (5, 5),
     'LOCO_bt': (3, 1, 3),
     'LOCO_n2': (2, 4),
+    'HRT':(1,1)
 
 }
 default_dash = (1, 1)
@@ -188,6 +193,8 @@ df['method'] = df['method'].replace('CPI_sqd', 'Sobol-CPI(1)_n2')
 df['method'] = df['method'].replace('R-CPI_sqd', 'Sobol-CPI(10)_n2')
 df['method'] = df['method'].replace('R-CPI2_sqd', 'Sobol-CPI(100)_n2')
 df['method'] = df['method'].replace('LOCO_sqd', 'LOCO_n2')
+df['method'] = df['method'].replace('CRT', 'HRT')
+
 
 
 
@@ -196,7 +203,7 @@ df['method'] = df['method'].replace('LOCO_sqd', 'LOCO_n2')
 sns.set_style("white")
 fig, ax = plt.subplots(2, 2, figsize=(12, 10), gridspec_kw={'hspace': 0.15, 'wspace': 0.2})
 
-methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(1)_sqrt', 'Sobol-CPI(1)_n', 'Sobol-CPI(1)_bt', 'Sobol-CPI(1)_n2'] 
+methods_to_plot = ['Sobol-CPI(1)', 'Sobol-CPI(1)_sqrt', 'Sobol-CPI(1)_n', 'Sobol-CPI(1)_bt', 'Sobol-CPI(1)_n2', 'LOCO-W', 'HRT'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, markers=markers, dashes=dashes, style='method',ax=ax[0, 0])  # Top-left subplot
 
@@ -208,7 +215,7 @@ ax[0, 0].set_xlabel(r'')
 ax[0, 0].set_ylabel(f'', fontsize=20)
 #ax[0, 0].legend().remove()
 
-methods_to_plot = ['Sobol-CPI(10)', 'Sobol-CPI(10)_sqrt', 'Sobol-CPI(10)_n', 'Sobol-CPI(10)_bt', 'Sobol-CPI(10)_n2'] 
+methods_to_plot = ['Sobol-CPI(10)', 'Sobol-CPI(10)_sqrt', 'Sobol-CPI(10)_n', 'Sobol-CPI(10)_bt', 'Sobol-CPI(10)_n2', 'LOCO-W', 'HRT'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[0, 1], markers=markers,dashes=dashes, style='method')  # Top-left subplot
 
@@ -221,7 +228,7 @@ ax[0, 1].set_ylabel(f'', fontsize=20)
 #ax[0, 0].legend().remove()
 
 
-methods_to_plot = ['Sobol-CPI(100)', 'Sobol-CPI(100)_sqrt', 'Sobol-CPI(100)_n', 'Sobol-CPI(100)_bt', 'Sobol-CPI(100)_n2',] 
+methods_to_plot = ['Sobol-CPI(100)', 'Sobol-CPI(100)_sqrt', 'Sobol-CPI(100)_n', 'Sobol-CPI(100)_bt', 'Sobol-CPI(100)_n2','LOCO-W', 'HRT'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[1, 0], markers=markers, dashes=dashes, style='method')  # Top-left subplot
 
@@ -233,7 +240,7 @@ ax[1, 0].set_xlabel(r'')
 ax[1, 0].set_ylabel(f'', fontsize=20)
 #ax[0, 0].legend().remove()
 
-methods_to_plot = ['LOCO', 'LOCO_sqrt', 'LOCO_n', 'LOCO_bt', 'LOCO_n2'] 
+methods_to_plot = ['LOCO', 'LOCO_sqrt', 'LOCO_n', 'LOCO_bt', 'LOCO_n2', 'LOCO-W', 'HRT'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
 sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[1, 1], markers=markers, dashes=dashes, style='method')  # Top-left subplot
 

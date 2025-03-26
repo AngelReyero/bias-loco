@@ -14,9 +14,9 @@ from utils import toep
 
 
 
-p =50
+p =100
 sparsity = 0.25
-method = "poly"
+method = "lin"
 
 seed= 0
 

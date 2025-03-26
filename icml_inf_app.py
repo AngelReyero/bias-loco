@@ -281,7 +281,7 @@ plt.savefig(f"final_figures/appendix/inf_{method}_p{p}_cor{cor}_pow.pdf", bbox_i
 
 
 p =50
-sparsity = 0.2
+sparsity = 0.25
 method = "poly"
 
 seed= 0
@@ -320,6 +320,8 @@ palette = {
     'Sobol-CPI(1)_bt': 'blue',
     'LOCO_bt': 'red',
     'Sobol-CPI(100)_bt': 'cyan',
+    'HRT': 'brown'
+
 }
 
 markers = {
@@ -341,6 +343,8 @@ markers = {
     'Sobol-CPI(1)_bt': '*',
     'LOCO_bt': '*',
     'Sobol-CPI(100)_bt': '*',
+    'HRT': 'o'
+
 }
 
 dashes = {
@@ -362,6 +366,7 @@ dashes = {
     'Sobol-CPI(1)_bt': (3, 1, 3),
     'LOCO_bt': (3, 1, 3),
     'Sobol-CPI(100)_bt': (3, 1, 3),
+    'HRT':(1, 1)
 }
 
 
