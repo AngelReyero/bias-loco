@@ -14,9 +14,9 @@ from utils import toep
 
 
 
-p =100
+p =50
 sparsity = 0.25
-method = "lin"
+method = "poly"
 
 seed= 0
 
@@ -207,7 +207,7 @@ fig, ax = plt.subplots(2, 2, figsize=(12, 10), gridspec_kw={'hspace': 0.15, 'wsp
 
 methods_to_plot = ['Sobol-CPI(1)_sqrt', 'Sobol-CPI(1)_n', 'Sobol-CPI(1)_n2', 'LOCO-W'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
-sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, markers=markers, dashes=dashes, style='method',ax=ax[0, 0])  # Top-left subplot
+sns.lineplot(data=filtered_df, x='n', y='power', hue='method', palette=palette, markers=markers, dashes=dashes, style='method',ax=ax[0, 0])  # Top-left subplot
 
 # Format top-left subplot
 ax[0, 0].set_xscale('log')
@@ -219,7 +219,7 @@ ax[0, 0].set_ylabel(f'', fontsize=20)
 
 methods_to_plot = ['Sobol-CPI(10)_sqrt', 'Sobol-CPI(10)_n', 'Sobol-CPI(10)_n2', 'LOCO-W'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
-sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[0, 1], markers=markers,dashes=dashes, style='method')  # Top-left subplot
+sns.lineplot(data=filtered_df, x='n', y='power', hue='method', palette=palette, ax=ax[0, 1], markers=markers,dashes=dashes, style='method')  # Top-left subplot
 
 # Format top-left subplot
 ax[0, 1].set_xscale('log')
@@ -232,7 +232,7 @@ ax[0, 1].set_ylabel(f'', fontsize=20)
 
 methods_to_plot = [ 'Sobol-CPI(100)_sqrt', 'Sobol-CPI(100)_n',  'Sobol-CPI(100)_n2','LOCO-W'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
-sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[1, 0], markers=markers, dashes=dashes, style='method')  # Top-left subplot
+sns.lineplot(data=filtered_df, x='n', y='power', hue='method', palette=palette, ax=ax[1, 0], markers=markers, dashes=dashes, style='method')  # Top-left subplot
 
 # Format top-left subplot
 ax[1, 0].set_xscale('log')
@@ -244,7 +244,7 @@ ax[1, 0].set_ylabel(f'', fontsize=20)
 
 methods_to_plot = ['LOCO_sqrt', 'LOCO_n', 'LOCO_n2', 'LOCO-W'] 
 filtered_df = df[df['method'].isin(methods_to_plot)]
-sns.lineplot(data=filtered_df, x='n', y='type_I', hue='method', palette=palette, ax=ax[1, 1], markers=markers, dashes=dashes, style='method')  # Top-left subplot
+sns.lineplot(data=filtered_df, x='n', y='power', hue='method', palette=palette, ax=ax[1, 1], markers=markers, dashes=dashes, style='method')  # Top-left subplot
 
 # Format top-left subplot
 ax[1, 1].set_xscale('log')
@@ -256,8 +256,8 @@ ax[1, 1].set_ylabel(f'', fontsize=20)
 
 fig.text(0.5, 0.05, 'Number of samples', ha='center', fontsize=20)
 
-fig.text(0.05, 0.45, 'Type_I', ha='center', fontsize=20, rotation=90)
+fig.text(0.05, 0.45, 'Power', ha='center', fontsize=20, rotation=90)
 
 
-plt.savefig(f"final_figures/appendix/type_I_{method}_p{p}_cor{cor}.pdf", bbox_inches="tight")
+plt.savefig(f"final_figures/appendix/power_{method}_p{p}_cor{cor}.pdf", bbox_inches="tight")
 
